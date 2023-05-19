@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "UniFieldTech",
+    "slug": "UniFieldTech",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "UniFieldTech"
+}
