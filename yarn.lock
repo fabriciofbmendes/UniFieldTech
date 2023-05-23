@@ -1900,6 +1900,13 @@
   resolved "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.5.tgz"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
 
+"@types/react-dom@^18.2.4":
+  version "18.2.4"
+  resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-18.2.4.tgz"
+  integrity sha512-G2mHoTMTL4yoydITgOGwWdWMVd8sNgyEP85xVmMKAPUBwQWm9wBPQUmvbeF4V3WBY1P7mmL4BkjQ0SqUpf1snw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-native@^0.72.0":
   version "0.72.0"
   resolved "https://registry.npmjs.org/@types/react-native/-/react-native-0.72.0.tgz"
@@ -5655,6 +5662,14 @@ react-devtools-core@^4.26.1:
     shell-quote "^1.6.1"
     ws "^7"
 
+react-dom@^18.2.0:
+  version "18.2.0"
+  resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.2.0.tgz"
+  integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
+  dependencies:
+    loose-envify "^1.1.0"
+    scheduler "^0.23.0"
+
 react-freeze@^1.0.0:
   version "1.0.3"
   resolved "https://registry.npmjs.org/react-freeze/-/react-freeze-1.0.3.tgz"
@@ -5684,6 +5699,11 @@ react-is@^17.0.1:
   version "17.0.2"
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
+
+react-localstorage@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/react-localstorage/-/react-localstorage-1.0.0.tgz"
+  integrity sha512-SxB6UmK+z8YsAfdWxXIciJaXsliysSZkiUMcHm6vMvqV7A/fXe5NTmXGTevkk21ZZePLH0vvBH9SxsmJloNknA==
 
 react-native-codegen@^0.71.5:
   version "0.71.5"

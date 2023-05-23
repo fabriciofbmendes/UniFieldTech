@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
 import axios from 'axios';
-import styles from '../../styles';
+import styles from '../../../styles';
 import { useNavigation } from '@react-navigation/native';
-import { propsStack } from '../../routes/Stack/Models';
+import { propsStack } from '../../../routes/Stack/Models';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -27,15 +27,17 @@ const LoginScreen = () => {
 
   const handleSignUp = () => {
     // Fazer a requisição para a API de cadastro
-    axios.post('sua_url_de_cadastro', { email, password })
-      .then(response => {
-        // Lógica para lidar com a resposta da API após o cadastro
-        console.log('Usuário cadastrado com sucesso:', response.data);
-      })
-      .catch(error => {
-        // Lógica para lidar com erros durante o cadastro
-        console.error('Erro no cadastro:', error);
-      });
+    // axios.post('sua_url_de_cadastro', { email, password })
+    //   .then(response => {
+    //     // Lógica para lidar com a resposta da API após o cadastro
+    //     console.log('Usuário cadastrado com sucesso:', response.data);
+    //   })
+    //   .catch(error => {
+    //     // Lógica para lidar com erros durante o cadastro
+    //     console.error('Erro no cadastro:', error);
+    //   });
+    navigation.navigate("Cadastro");
+
   };
 
   return (
