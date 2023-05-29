@@ -1,0 +1,12 @@
+{
+    "fazendas":[
+        {
+            "id" : 1,
+            "nome" : "minhaFazenda",
+            "latitude" : -21.4294,
+            "longitude" : -45.9471,
+            "hectares" : 10,
+            "idUsuario" : "abc"
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+{
+    "routes": {
+      "/fazendas/:idUsuario": "/fazendas?usuario=:idUsuario"
+    }
+  }
+  

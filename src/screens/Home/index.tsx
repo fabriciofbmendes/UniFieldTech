@@ -1,11 +1,49 @@
-import {View, Text} from 'react-native'
-import React from 'react-native'
-import stilo from '../../styles'
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import axios from 'axios';
+import stilo from '../../styles';
+import { getFazendasDoUsuario } from '../../api';
+import { useNavigation } from '@react-navigation/native';
+import { propsStack } from '../../routes/Stack/Models';
+
 const Home = () => {
+  const [fazendas, setFazendas] = useState<Fazenda[]>([]);
+  const navigation = useNavigation<propsStack>();
+
+  useEffect(() => {
+    const fetchFazendas = async () => {
+      try {
+        const response = JSON.stringify(await getFazendasDoUsuario('abc'));
+        console.log("Aqui:"+response);
+        setFazendas(JSON.parse(response));
+      } catch (error) {
+        console.error('Erro ao obter fazendas:', error);
+      }
+    };
+
+    fetchFazendas();
+  }, []);
+
+  const handleFazendaClick = (fazenda: Fazenda) => {
+    // Navegar para a tela do mapa e passar os valores da fazenda
+    navigation.navigate("Fazenda", {
+      latitude: fazenda.latitude,
+      longitude: fazenda.longitude,
+      hectares: fazenda.hectares,
+    });
+  };
+
   return (
-    <View style={stilo.container}>
-      <Text style={stilo.text}>Home</Text>
-    </View>
+    <>
+      {fazendas.map((fazenda) => (
+        <TouchableOpacity
+          key={fazenda.id}
+          onPress={() => handleFazendaClick(fazenda)}
+        >
+          <Text>{fazenda.nome}</Text>
+        </TouchableOpacity>
+      ))}
+    </>
   );
 };
 
