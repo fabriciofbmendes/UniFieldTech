@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://192.168.1.2:3000';
+const API_URL = 'http://10.1.12.28:3000';
 
 export const getFazendasDoUsuario = async (idUsuario:string) => {
     try {
