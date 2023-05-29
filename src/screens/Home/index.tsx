@@ -2,19 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import stilo from '../../styles';
-import { getFazendasDoUsuario } from '../../api';
+import { getClima, getFazendasDoUsuario } from '../../api';
 import { useNavigation } from '@react-navigation/native';
 import { propsStack } from '../../routes/Stack/Models';
+import { HumidadeAcimaDoSolo } from '../../interfaces/climApiVariables';
+import moment from 'moment';
+
 
 const Home = () => {
   const [fazendas, setFazendas] = useState<Fazenda[]>([]);
   const navigation = useNavigation<propsStack>();
-
+  const currentDate = moment().format('YYYY-MM-DD');
+  const [clima, setClima] = useState<[]>([]);
   useEffect(() => {
     const fetchFazendas = async () => {
       try {
         const response = JSON.stringify(await getFazendasDoUsuario('abc'));
-        console.log("Aqui:"+response);
         setFazendas(JSON.parse(response));
       } catch (error) {
         console.error('Erro ao obter fazendas:', error);
@@ -24,8 +27,10 @@ const Home = () => {
     fetchFazendas();
   }, []);
 
-  const handleFazendaClick = (fazenda: Fazenda) => {
+  const handleFazendaClick = async (fazenda: Fazenda) => {
     // Navegar para a tela do mapa e passar os valores da fazenda
+    const clima = JSON.stringify(await getClima(HumidadeAcimaDoSolo,currentDate,fazenda.longitude,fazenda.latitude));
+    
     navigation.navigate("Fazenda", {
       latitude: fazenda.latitude,
       longitude: fazenda.longitude,
