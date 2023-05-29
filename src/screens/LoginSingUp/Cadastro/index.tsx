@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button } from 'react-native';
 import axios from 'axios';
+import styles from '../../../styles';
 
 const Cadastro = () => {
   const [nome, setNome] = useState('');
@@ -49,25 +50,29 @@ const Cadastro = () => {
   };
 
   return (
-    <View>
-      <Text>Cadastro</Text>
+    <View style={styles.cadastro}>
+      <Text style={styles.formlabel}>Cadastro</Text>
       <TextInput
+        style={[styles.input,styles.inputform]}
         placeholder="Nome Completo *"
         value={nome}
         onChangeText={setNome}
       />
       <TextInput
+      style={[styles.input,styles.inputform]}
         placeholder="CPF *"
         value={cpf}
         onChangeText={setCpf}
       />
       <TextInput
+      style={[styles.input,styles.inputform]}
         placeholder="Senha *"
         secureTextEntry
         value={senha}
         onChangeText={setSenha}
       />
       <TextInput
+      style={[styles.input,styles.inputform]}
         placeholder="Confirmar Senha *"
         secureTextEntry
         value={confirmarSenha}
@@ -93,11 +98,13 @@ const Cadastro = () => {
       <Button title="Adicionar Celular" onPress={handleAddCelular} />
 
       <TextInput
+      style={[styles.input,styles.inputform,{top:10}]}
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
       />
       <TextInput
+      style={[styles.input,styles.inputform,{top:10}]}
         placeholder="Data de Nascimento *"
         value={dataNascimento}
         onChangeText={setDataNascimento}
