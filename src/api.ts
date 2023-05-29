@@ -14,12 +14,14 @@ export const getFazendasDoUsuario = async (idUsuario:string) => {
   
 export const getClima = async (variavel:string,data:string,latitude:number,longitude:number)=>{
   try {
-    console.log(variavel,data,longitude,latitude);
-    const token = 'cec2bb5f-34d6-3fbb-b6d6-36895289c148'; // Substitua 'seu_token_aqui' pelo seu token de autorização válido
+    
+    const token = '649da341-a94d-39fe-a84e-52f3d033de63'; // Substitua 'seu_token_aqui' pelo seu token de autorização válido
     const headers = {
       Authorization: `Bearer ${token}`,
       Accept: 'application/json'
     };
+    latitude=-22.817829579132503
+    longitude=-47.06143527737295
     const response = await axios.get(`https://api.cnptia.embrapa.br/climapi/v1/ncep-gfs/${variavel}/${data}/${longitude}/${latitude}`, {
       headers: headers,
     });

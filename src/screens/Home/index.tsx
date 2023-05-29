@@ -31,6 +31,7 @@ const Home = () => {
 
   const handleFazendaClick = async (fazenda: Fazenda) => {
     // Navegar para a tela do mapa e passar os valores da fazenda
+
     const clima = JSON.stringify(await getClima(HumidadeAcimaDoSolo,currentDate,fazenda.longitude,fazenda.latitude));
     
     navigation.navigate("Fazenda", {
@@ -44,7 +45,7 @@ const Home = () => {
     <ScrollView>
       <View style={styles.home}>
       
-        {fazendas.map((fazenda) => (
+        {fazendas.map((fazenda:Fazenda) => (
           <View style={styles.card}>
           <ImageBackground source={require('../img/fundo-login.jpg')} style={styles.fundocard}></ImageBackground>
           
