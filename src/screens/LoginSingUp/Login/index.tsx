@@ -15,7 +15,7 @@ const LoginScreen = () => {
   
 
   const handleLogin = () => {
-    navigation.navigate("Home");
+    navigation.navigate("ClimaRegiao")
     // Fazer a requisição para a API de login
     // axios.post('sua_url_de_login', { email, password })
     //   .then(response => {

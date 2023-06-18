@@ -6,6 +6,7 @@ import Login from '../../screens/LoginSingUp/Login'
 import Cadastro from '../../screens/LoginSingUp/Cadastro'
 import { propsNavigationStack } from "./Models";
 import Fazenda from "../../screens/Fazenda";
+import ClimaRegiao from "../../screens/ClimaRegiao";
 
 const {Navigator,Screen} = createNativeStackNavigator<propsNavigationStack>()
 
@@ -16,6 +17,7 @@ export default function() {
             <Screen name="Home" component={Home}/>
             <Screen name="Cadastro" component={Cadastro}/>
             <Screen name="Fazenda" component={Fazenda}/>
+            <Screen name="ClimaRegiao" component={ClimaRegiao}/>
         </Navigator>
     )
 }
