@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-const API_URL = 'http://192.168.1.2:3000';
+import {Cliente} from './models/usuario'
+const API_URL = 'https://192.168.1.2:5141';
 
 export const getFazendasDoUsuario = async (idUsuario:string) => {
     try {
@@ -35,5 +35,16 @@ export const getClima = async (variavel:string,data:string,latitude:number,longi
     return response;
   } catch (error) {
     console.error('Erro ao obter fazendas:', error);
+  }
+};
+
+export const postUsuario = async (cliente: Cliente) => {
+  try {
+    cliente.dataNacs = "2023-06-18";
+    console.log('Passei Aqui:' + JSON.stringify(cliente));
+    await axios.post('http://192.168.1.2:5141/api/Cliente', cliente);
+    return;
+  } catch (error) {
+    console.error('Erro ao criar usuário:', error);
   }
 };
