@@ -19,6 +19,7 @@ export default function() {
             <Screen name="Cadastro" component={Cadastro}/>
             <Screen name="Fazenda" component={Fazenda}/>
             <Screen name="CadastroFazenda" component={CadastroFazenda}/>
+            <Screen name="ClimaRegiao" component={ClimaRegiao}/>
         </Navigator>
     )
 }
