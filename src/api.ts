@@ -2,12 +2,15 @@ import axios from 'axios';
 import {Cliente} from './models/usuario'
 import { LoginUser } from './models/loginUser';
 import { celular } from './models/celular';
+import * as Location from 'expo-location';
+import {fazendaCadastro} from './interfaces/fazendaCadastro';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 let TokenAutorizado: string | null;
 const API_URL = 'http://192.168.1.2:5141';
 
 export const getFazendasDoUsuario = async (clienteID:string) => {
     try {
+      TokenAutorizado = await AsyncStorage.getItem('authToken');
       const response = await axios.get(`${API_URL}/api/Fazenda`, {
         headers: {
           Authorization: `Bearer ${TokenAutorizado}`,
@@ -76,6 +79,31 @@ export const postUsuario = async (cliente: Cliente,confirmPassword : string,celu
   }
 };
 
+
+export const cadastrarFazenda = async (fazenda : fazendaCadastro) => {
+  TokenAutorizado = await AsyncStorage.getItem('authToken');
+    try {
+    const response = await axios.post('http://192.168.1.2:5141/api/Fazenda', fazenda, {
+      headers: {
+        Authorization: `Bearer ${TokenAutorizado}`,
+        Accept: 'application/json'
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    if (error.response) {
+      console.log('Erro na resposta:', error.response.data);
+      console.log('Status do erro:', error.response.status);
+      console.log('Headers da resposta:', error.response.headers);
+    } else if (error.request) {
+      console.log('Erro na requisição:', error.request);
+    } else {
+      console.log('Erro desconhecido:', error.message);
+    }
+    throw error;
+  }
+};
+
 export const loginUser = async (cliente: LoginUser) => {
   try {
     const response = await axios.post('http://192.168.1.2:5141/api/Values/LoginUser', cliente);
@@ -109,3 +137,23 @@ export const getUserId = async () => {
     return null;
   }
 };
+
+
+export async function getCoordinates(address: string): Promise<{ latitude: string; longitude: string }> {
+  try {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      throw new Error('Permissão de localização não foi concedida.');
+    }
+
+    const geocode = await Location.geocodeAsync(address);
+    if (geocode.length > 0) {
+      const { latitude, longitude } = geocode[0];
+      return { latitude: latitude.toString(), longitude: longitude.toString() };
+    } else {
+      throw new Error('Nenhum resultado encontrado para o endereço fornecido.');
+    }
+  } catch (error) {
+    throw new Error('Erro ao buscar as coordenadas do endereço.');
+  }
+}

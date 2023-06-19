@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import stilo from '../../styles';
-import { getClima, getFazendasDoUsuario } from '../../api';
+import { getClima, getFazendasDoUsuario, getUserId } from '../../api';
 import { useNavigation } from '@react-navigation/native';
 import { propsStack } from '../../routes/Stack/Models';
 import { HumidadeAcimaDoSolo } from '../../interfaces/climApiVariables';
@@ -17,7 +17,7 @@ const Home = () => {
   useEffect(() => {
     const fetchFazendas = async () => {
       try {
-        const response = JSON.stringify(await getFazendasDoUsuario('abc'));
+        const response = JSON.stringify(await getFazendasDoUsuario(await getUserId()));
         setFazendas(JSON.parse(response));
       } catch (error) {
         console.error('Erro ao obter fazendas:', error);
@@ -34,21 +34,30 @@ const Home = () => {
     navigation.navigate("Fazenda", {
       latitude: fazenda.latitude,
       longitude: fazenda.longitude,
-      hectares: fazenda.hectares,
+      hectares: fazenda.hectar,
     });
   };
 
+
+  const handleCadastrarFazenda = () => {
+    // Navegar para a tela de cadastro de fazenda
+    navigation.navigate('CadastroFazenda');
+  };
+
   return (
-    <>
+    <View>
+    <TouchableOpacity onPress={handleCadastrarFazenda}>
+        <Text>Cadastrar Fazenda</Text>
+      </TouchableOpacity>
       {fazendas.map((fazenda) => (
         <TouchableOpacity
-          key={fazenda.id}
+          key={fazenda.fazendaID}
           onPress={() => handleFazendaClick(fazenda)}
         >
-          <Text>{fazenda.nome}</Text>
+          <Text>{fazenda.nomeFazenda}</Text>
         </TouchableOpacity>
       ))}
-    </>
+    </View>
   );
 };
 
