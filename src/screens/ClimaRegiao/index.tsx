@@ -1,94 +1,127 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, FlatList } from 'react-native';
 import axios from 'axios';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 const ClimaRegiao = () => {
   const route = useRoute();
   const [data, setData] = useState({});
-  const [temperature, setTemperature] = useState(null);
-  const [closestCities, setClosestCities] = useState([]);
+  const [cityDetais, setCityDetais] = useState({});
   const [location, setLocation] = useState('');
+
+  const [city, setCity] = useState('');
+  const [cityList, setCityList] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&hourly=temperature_2m&current_weather=true&forecast_days=1&timezone=America%2FSao_Paulo`;
-
-      try {
-        const response = await axios.get(url);
-        setData(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error('Error fetching temperature:', error);
-      }
+      
     };
 
     // Chama a função fetchData inicialmente
-    fetchData();
+    //fetchData();
 
     // Chama a função fetchData novamente quando a localização é atualizada
   }, [location]);
 
-  const handleLocationSubmit = () => {
-    // Realiza alguma validação antes de atualizar a localização
-    // e chamar fetchData novamente
-    setLocation({ latitude: 0, longitude: 0 }); // Atualiza a localização com os valores corretos
+  const getTemp = async (latitude : string, longitude : string) => {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&current_weather=true&forecast_days=1&timezone=America%2FSao_Paulo`;
+
+    try {
+      const response = await axios.get(url);
+      setData(response.data);
+      console.log(response.data.current_weather);
+    } catch (error) {
+      console.error('Error fetching temperature:', error);
+    }
+  };
+
+  const getCity = async (city: string) => {
+    const url = `https://www.mapquestapi.com/geocoding/v1/address?key=nQqONaeF5h2qylUmCjdyjH4wDeTLElmW&location=${city}`;
+    try {
+      const response = await axios.get(url);
+      setCityDetais(response.data);
+      //console.log(response.data.results[0].locations[0].latLng);
+    } catch (error) {
+      console.error('Error fetchinfg City:', error);
+    }
+  }
+
+  const handleAddCity = (cityName: string) => {
+    if (cityName) {
+      getCity(cityName);
+      getTemp(cityDetais.results[0].locations[0].latLng.lat,cityDetais.results[0].locations[0].latLng.lng);
+      
+      const newCity = {
+        name: cityName,
+        latitude: cityDetais.results[0].locations[0].latLng.lat, // Inserir lógica para obter latitude
+        longitude: cityDetais.results[0].locations[0].latLng.lng, // Inserir lógica para obter longitude
+        temperatura: data.current_weather.temperature, // Inserir lógica para obter temperatura
+      };
+      console.log(newCity);
+      setCityList([...cityList, newCity]);
+      setCity('');
+    }
+  };
+
+  const renderCityItem = ({ item }) => {
+    return (
+      <View style={{ padding: 10 }}>
+        <Text>{item.name}</Text>
+        <Text>Latitude: {item.latitude}</Text>
+        <Text>Longitude: {item.longitude}</Text>
+        <Text>Temperatura: {item.temperatura}</Text>
+      </View>
+    );
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.headerText}>
-        Latitude: -21.4, Longitude: -45.95
-      </Text>
-      <View style={styles.temperatureContainer}>
-        <Text style={styles.temperatureText}>{data.current_weather?.temperature}</Text>
+    <View style={{ flex: 1, padding: 20 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <GooglePlacesAutocomplete
+          placeholder="Search"
+          query={{
+            key: `AIzaSyCelaOIk2vZZiqnUm9-M_x5Vt8BQcyf2jE`,
+            language: 'pt', // language of the results
+          }}
+          onPress={(data, details) => handleAddCity(data.description)}
+          onFail={(error) => console.error(error)}
+          requestUrl={{
+            url:
+              'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
+            useOnPlatform: 'web',
+          }}
+        />
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => handleAddCity(city)}
+        >
+          <Text style={styles.buttonText}>Adicionar</Text>
+        </TouchableOpacity>
       </View>
+
+      <Text style={styles.headerText}>Lista de Cidades</Text>
+
       <TextInput
         style={styles.input}
-        placeholder="Digite a localização"
-        value={location}
-        onChangeText={setLocation}
+        placeholder="Insira o nome da cidade"
+        onChangeText={text => setCity(text)}
+        value={city}
       />
-      <TouchableOpacity style={styles.button} onPress={handleLocationSubmit}>
-        <Text style={styles.buttonText}>Buscar</Text>
-      </TouchableOpacity>
+
+      <FlatList
+        data={cityList}
+        renderItem={renderCityItem}
+        keyExtractor={(item, index) => index.toString()}
+        style={styles.flatList}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-  },
-  headerText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  temperatureContainer: {
-    borderWidth: 2,
-    borderRadius: 8,
-    padding: 10,
-    borderColor: 'black',
-    marginBottom: 20,
-  },
-  temperatureText: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: 'red',
-  },
-  input: {
-    width: '80%',
-    height: 40,
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
-  button: {
+  addButton: {
+    marginLeft: 10,
     backgroundColor: 'blue',
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -98,6 +131,20 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+  },
+  flatList: {
+    marginTop: 20,
   },
 });
 
