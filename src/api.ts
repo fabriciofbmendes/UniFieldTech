@@ -4,6 +4,7 @@ import { LoginUser } from './models/loginUser';
 import { celular } from './models/celular';
 import * as Location from 'expo-location';
 import {fazendaCadastro} from './interfaces/fazendaCadastro';
+import {temperaturas} from './models/temperaturas';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 let TokenAutorizado: string | null;
 const API_URL = 'http://192.168.1.2:5141';
@@ -55,12 +56,12 @@ export const getClima = async (variavel:string,data:string,latitude:number,longi
 const getTemp = async (latitude : number, longitude : number) => {
   latitude = -22.817829579132503
   longitude = -47.06143527737295
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&current_weather=true&forecast_days=1&timezone=America%2FSao_Paulo`;
-
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}1&hourly=relativehumidity_2m,precipitation_probability,precipitation,rain,cloudcover,windspeed_10m,winddirection_10m,temperature_80m,uv_index,uv_index_clear_sky,temperature_925hPa,relativehumidity_925hPa,cloudcover_925hPa,windspeed_925hPa,winddirection_925hPa&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,uv_index_clear_sky_max,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant&current_weather=true`
   try {
     const response = await axios.get(url);
-    //setData(response.data);
+    const dados = temperaturas;
     console.log(response.data.current_weather);
+    return response.data;
   } catch (error) {
     console.error('Error fetching temperature:', error);
   }

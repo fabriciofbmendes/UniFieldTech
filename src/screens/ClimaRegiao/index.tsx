@@ -14,12 +14,12 @@ const ClimaRegiao = () => {
   const [cityList, setCityList] = useState([]);
 
   const getTemp = async (latitude : string, longitude : string) => {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&current_weather=true&forecast_days=1&timezone=America%2FSao_Paulo`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,precipitation,windspeed_10m,winddirection_10m,temperature_925hPa,relativehumidity_925hPa,windspeed_925hPa&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,uv_index_clear_sky_max,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=America%2FSao_Paulo`;
 
     try {
       const response = await axios.get(url);
       setData(response.data);
-      console.log(response.data.current_weather);
+      //console.log(response.data.daily);
     } catch (error) {
       console.error('Error fetching temperature:', error);
     }
@@ -34,38 +34,58 @@ const ClimaRegiao = () => {
     } catch (error) {
       console.error('Error fetchinfg City:', error);
     }
-  }
+  };
 
   const handleAddCity = (cityName: string) => {
     if (cityName) {
       getCity(cityName);
-      getTemp(cityDetais.results[0].locations[0].latLng.lat,cityDetais.results[0].locations[0].latLng.lng);
+      const latitude = cityDetais.results[0].locations[0].latLng.lat; // Inserir lógica para obter latitude
+      const longitude = cityDetais.results[0].locations[0].latLng.lng;
+      getTemp(latitude, longitude);
       
       const newCity = {
         name: cityName,
-        latitude: cityDetais.results[0].locations[0].latLng.lat, // Inserir lógica para obter latitude
-        longitude: cityDetais.results[0].locations[0].latLng.lng, // Inserir lógica para obter longitude
         temperatura: data.current_weather.temperature, // Inserir lógica para obter temperatura
-      };
+        VelVento: data.current_weather.windspeed,
+        tempMax: calcularMedia(data.daily.temperature_2m_max),
+        tempMin: calcularMedia(data.daily.temperature_2m_min), 
+        precipitation : calcularMedia(data.daily.precipitation_probability_max),
+      };     
       console.log(newCity);
       setCityList([...cityList, newCity]);
       setCity('');
+    };
+    
+    
+  };
+  const calcularMedia = (array: number[]) => {
+
+    if (!array || array.length === 0) {
+      console.log("No");
+      return 0; // Retorna 0 se o array estiver vazio ou não estiver definido
     }
+  
+    const soma = array.reduce((a, b) => a + b); // Calcula a soma dos valores
+    const media = soma / array.length; // Calcula a média
+  
+    return media.toFixed(1); //
   };
 
-  const renderCityItem = ({ item }) => {
+  const renderCityItem = ({item } : any) => {
     return (
       <View style={{ padding: 10 }}>
         <Text>{item.name}</Text>
-        <Text>Latitude: {item.latitude}</Text>
-        <Text>Longitude: {item.longitude}</Text>
-        <Text>Temperatura: {item.temperatura}</Text>
+        <Text>Temperatura Atual:  {item.temperatura}</Text>
+        <Text>Temperatura Maxima: {item.tempMax}</Text>
+        <Text>Temperatura Maxima: {item.tempMin}</Text>
+        <Text>Precipitação:       {item.VelVento}</Text>
+        <Text>Velocide do Vento:  {item.VelVento}</Text>
       </View>
     );
   };
 
-  return (
-    <View style={{ flex: 1, padding: 20 }}>
+  return ( 
+  <View style={{ flex: 1, padding: 20 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <GooglePlacesAutocomplete
           placeholder="Search"
