@@ -59,7 +59,7 @@ const getTemp = async (latitude : number, longitude : number) => {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}1&hourly=relativehumidity_2m,precipitation_probability,precipitation,rain,cloudcover,windspeed_10m,winddirection_10m,temperature_80m,uv_index,uv_index_clear_sky,temperature_925hPa,relativehumidity_925hPa,cloudcover_925hPa,windspeed_925hPa,winddirection_925hPa&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,uv_index_clear_sky_max,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant&current_weather=true`
   try {
     const response = await axios.get(url);
-    const dados = temperaturas;
+    // const dados = temperaturas;
     console.log(response.data.current_weather);
     return response.data;
   } catch (error) {

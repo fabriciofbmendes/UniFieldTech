@@ -12,14 +12,35 @@ const ClimaRegiao = () => {
 
   const [city, setCity] = useState('');
   const [cityList, setCityList] = useState([]);
+  const [intervalId, setIntervalId] = useState<number | null>(null);
+  
+  useEffect(() => {
+    // Inicia o intervalo de atualização a cada um minuto (60 segundos)
+    const id = setInterval(async () => {
+      const updatedCityDetails = [...cityDetais];
+      for (let i = 0; i < updatedCityDetails.length; i++) {
+        const cityDetail = updatedCityDetails[i];
+        const latitude = cityDetail.results[0].locations[0].latLng.lat;
+        const longitude = cityDetail.results[0].locations[0].latLng.lng;
+        await getTemp(latitude, longitude);
+      }
+      setCityDetais(updatedCityDetails);
+    }, 60 * 1000); // 60 segundos em milissegundos
+  
+    // Encerra o intervalo quando o componente for desmontado
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [cityDetais]);
 
   const getTemp = async (latitude : string, longitude : string) => {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,precipitation,windspeed_10m,winddirection_10m,temperature_925hPa,relativehumidity_925hPa,windspeed_925hPa&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,uv_index_clear_sky_max,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=America%2FSao_Paulo`;
-
     try {
       const response = await axios.get(url);
       setData(response.data);
-      //console.log(response.data.daily);
+      console.log(response.data);
     } catch (error) {
       console.error('Error fetching temperature:', error);
     }
@@ -47,8 +68,8 @@ const ClimaRegiao = () => {
         name: cityName,
         temperatura: data.current_weather.temperature, // Inserir lógica para obter temperatura
         VelVento: data.current_weather.windspeed,
-        tempMax: calcularMedia(data.daily.temperature_2m_max),
-        tempMin: calcularMedia(data.daily.temperature_2m_min), 
+        tempMax: data.daily.temperature_2m_max[0],
+        tempMin: data.daily.temperature_2m_min[0], 
         precipitation : calcularMedia(data.daily.precipitation_probability_max),
       };     
       console.log(newCity);
@@ -77,7 +98,7 @@ const ClimaRegiao = () => {
         <Text>{item.name}</Text>
         <Text>Temperatura Atual:  {item.temperatura}</Text>
         <Text>Temperatura Maxima: {item.tempMax}</Text>
-        <Text>Temperatura Maxima: {item.tempMin}</Text>
+        <Text>Temperatura Minima: {item.tempMin}</Text>
         <Text>Precipitação:       {item.VelVento}</Text>
         <Text>Velocide do Vento:  {item.VelVento}</Text>
       </View>
