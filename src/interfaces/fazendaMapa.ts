@@ -1,5 +1,5 @@
 interface FazendaMapa {
   latitude: number;
   longitude: number;
-  hectar: number;
+  hectare: number;
 }
