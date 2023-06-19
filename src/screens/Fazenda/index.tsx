@@ -2,19 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import MapView, { Circle } from 'react-native-maps';
 import axios from 'axios';
+import { useRoute } from '@react-navigation/native';
 
 const ClimaRegiao = () => {
   const [temperaturaFazenda, setTemperaturaFazenda] = useState(null);
   const [temperaturasCidades, setTemperaturasCidades] = useState([]);
 
-  const latitudeFazenda = -21.42370358340586;
-  const longitudeFazenda = -45.954814513808884;
+  const route = useRoute();
+  let { latitude, longitude, hectar } = route.params as FazendaMapa;
+
+  latitude = parseFloat(latitude.toString());
+  longitude = parseFloat(longitude.toString());
 
   useEffect(() => {
     const obterTemperaturaFazenda = async () => {
       try {
         const response = await axios.get(
-          `https://api.open-meteo.com/v1/forecast?latitude=${latitudeFazenda}&longitude=${longitudeFazenda}`
+          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}`
         );
         const temperatura = response.data.current.temperature;
         setTemperaturaFazenda(temperatura);
@@ -26,7 +30,7 @@ const ClimaRegiao = () => {
     const obterTemperaturasCidades = async () => {
       try {
         const response = await axios.get(
-          `https://api.open-meteo.com/v1/forecast?latitude=${latitudeFazenda}&longitude=${longitudeFazenda}&daily=temperature_2m_min,temperature_2m_max&limit=5`
+          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_min,temperature_2m_max&limit=5`
         );
         const temperaturas = response.data.daily;
         setTemperaturasCidades(temperaturas);
@@ -37,21 +41,21 @@ const ClimaRegiao = () => {
 
     obterTemperaturaFazenda();
     obterTemperaturasCidades();
-  }, [latitudeFazenda, longitudeFazenda]);
+  }, [latitude, longitude]);
 
   return (
     <View style={styles.container}>
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: latitudeFazenda,
-          longitude: longitudeFazenda,
+          latitude: latitude,
+          longitude: longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
       >
         <Circle
-          center={{ latitude: latitudeFazenda, longitude: longitudeFazenda }}
+          center={{ latitude: latitude, longitude: longitude }}
           radius={100}
           fillColor="rgba(0, 128, 255, 0.2)"
           strokeColor="rgba(0, 128, 255, 0.8)"
