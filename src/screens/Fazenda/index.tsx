@@ -9,9 +9,11 @@ const ClimaRegiao = () => {
   const [temperaturasCidades, setTemperaturasCidades] = useState([]);
 
   
- 
-  const latitude = -15.484848484848484;
-  const longitude = -15.22222221515151;
+  const route = useRoute();
+  let { latitude, longitude, hectar } = route.params as FazendaMapa;
+
+  latitude = parseFloat(latitude.toString());
+  longitude = parseFloat(longitude.toString());
 
   useEffect(() => {
     const obterTemperaturaFazenda = async () => {
