@@ -13,6 +13,7 @@ const ClimaRegiao = () => {
 
   latitude = parseFloat(latitude.toString());
   longitude = parseFloat(longitude.toString());
+  hectar = Math.sqrt(hectar * 10000);
 
   useEffect(() => {
     const obterTemperaturaFazenda = async () => {
