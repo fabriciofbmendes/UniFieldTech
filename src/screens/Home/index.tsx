@@ -8,9 +8,10 @@ import { propsStack } from '../../routes/Stack/Models';
 import styles from '../../styles';
 
 import { HumidadeAcimaDoSolo } from '../../interfaces/climApiVariables';
+import {getUserId} from '../../api'
 import moment from 'moment';
 
-
+const userId = getUserId();
 const Home = () => {
   const [fazendas, setFazendas] = useState<Fazenda[]>([]);
   const navigation = useNavigation<propsStack>();

@@ -1,10 +1,19 @@
 import axios from 'axios';
+import {Cliente} from './models/usuario'
+import { LoginUser } from './models/loginUser';
+import { celular } from './models/celular';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+let TokenAutorizado: string | null;
+const API_URL = 'http://192.168.1.2:5141';
 
-const API_URL = 'http://10.1.12.28:3000';
-
-export const getFazendasDoUsuario = async (idUsuario:string) => {
+export const getFazendasDoUsuario = async (clienteID:string) => {
     try {
-      const response = await axios.get(`${API_URL}/fazendas?usuario=${idUsuario}`);
+      const response = await axios.get(`${API_URL}/api/Fazenda`, {
+        headers: {
+          Authorization: `Bearer ${TokenAutorizado}`,
+          Accept: 'application/json'
+        },
+      });
       const fazendas = response.data;
       return fazendas;
     } catch (error) {
@@ -37,5 +46,66 @@ export const getClima = async (variavel:string,data:string,latitude:number,longi
     return response;
   } catch (error) {
     console.error('Erro ao obter fazendas:', error);
+  }
+};
+
+export const postUsuario = async (cliente: Cliente,confirmPassword : string,celulares : celular[]) => {
+  try {
+    cliente.dataNacs = "2023-06-18";
+    console.log(celulares);
+    const clientUser = {
+      "email" : cliente.e_Mail,
+      "password" : cliente.password,
+      "confirmPassword": confirmPassword
+    }
+    await axios.post('http://192.168.1.2:5141/api/Values/CreateUser', clientUser);
+
+    // if(result == null)
+    //   return;
+    await axios.post('http://192.168.1.2:5141/api/Cliente', cliente);
+    // const clienteID : any =
+    // if(clienteID != 0){
+    //   celulares.forEach(async celular => {
+    //     celular.clienteID = clienteID;
+    //     await axios.post('http://192.168.1.2:5141/api/Celular', celular);
+    //   });
+    // }
+    return;
+  } catch (error) {
+    console.error('Erro ao criar usuário:', error);
+  }
+};
+
+export const loginUser = async (cliente: LoginUser) => {
+  try {
+    const response = await axios.post('http://192.168.1.2:5141/api/Values/LoginUser', cliente);
+    if (response.data && response.data.token) {
+      const authToken = response.data.token;
+      await AsyncStorage.setItem('authToken', authToken);
+
+      TokenAutorizado = await AsyncStorage.getItem('authToken');
+      return "success";
+    } else {
+      throw new Error('Token de autenticação não encontrado na resposta da API.');
+    }
+  } catch (error) {
+    console.error('Erro ao criar usuário:', error);
+    throw error; // Relança o erro para ser tratado posteriormente
+  }
+};
+
+
+export const getUserId = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/Values/id`, {
+      headers: {
+        Authorization: `Bearer ${TokenAutorizado}`,
+      },
+    });
+    const userId = response.data;
+    return userId;
+  } catch (error) {
+    console.error('Erro ao obter o ID do usuário:', error);
+    return null;
   }
 };
