@@ -24,6 +24,7 @@
     "react-dom": "^18.2.0",
     "react-localstorage": "^1.0.0",
     "react-native": "0.71.7",
+    "react-native-geolocation-service": "^5.3.1",
     "react-native-maps": "^1.7.1"
   },
   "devDependencies": {
