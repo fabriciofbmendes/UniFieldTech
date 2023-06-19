@@ -4,25 +4,22 @@ import axios from 'axios';
 import styles from '../../../styles';
 import { useNavigation } from '@react-navigation/native';
 import { propsStack } from '../../../routes/Stack/Models';
-
+import { loginUser } from '../../../api';
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation<propsStack>();
 
-  const handleLogin = () => {
-    navigation.navigate("Home");
-    // Fazer a requisição para a API de login
-    // axios.post('sua_url_de_login', { email, password })
-    //   .then(response => {
-    //     // Lógica para lidar com a resposta da API após o login
-    //     console.log('Usuário logado com sucesso:', response.data);
-
-    //   })
-    //   .catch(error => {
-    //     // Lógica para lidar com erros durante o login
-    //     console.error('Erro no login:', error);
-    //   });
+  const handleLogin = async () => {
+    const cliente = {
+      email,
+      password
+    };
+    const result = await loginUser(cliente);
+    console.log(result);
+    if(result == "success"){
+      navigation.navigate("Home");
+    }
   };
 
   const handleSignUp = () => {

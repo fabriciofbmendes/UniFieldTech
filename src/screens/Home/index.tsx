@@ -6,9 +6,10 @@ import { getClima, getFazendasDoUsuario } from '../../api';
 import { useNavigation } from '@react-navigation/native';
 import { propsStack } from '../../routes/Stack/Models';
 import { HumidadeAcimaDoSolo } from '../../interfaces/climApiVariables';
+import {getUserId} from '../../api'
 import moment from 'moment';
 
-
+const userId = getUserId();
 const Home = () => {
   const [fazendas, setFazendas] = useState<Fazenda[]>([]);
   const navigation = useNavigation<propsStack>();

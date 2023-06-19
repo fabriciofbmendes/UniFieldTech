@@ -3,13 +3,13 @@ import { View, Text, TextInput, Button } from 'react-native';
 import axios from 'axios';
 
 import { postUsuario } from '../../../api';
-
+import { celular } from '../../../models/celular';
 const Cadastro = () => {
   const [nomeCliente, setNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [password, setpassword] = useState('');
   const [confirmarpassword, setConfirmarpassword] = useState('');
-  const [celulares, setCelulares] = useState(['']); // array to store phone numbers
+  const [celulares, setCelulares] = useState<celular[]>([{ celularID: 0, celularN: '', clienteID: 0 }]); // array to store phone numbers
   const [e_Mail, sete_Mail] = useState('');
   const [dataNacs, setdataNacs] = useState('');
 
@@ -27,7 +27,7 @@ const Cadastro = () => {
         codigo
       };
 
-      const novoUsuario = await postUsuario(cliente);
+      const novoUsuario = await postUsuario(cliente,confirmarpassword,celulares);
       console.log('Sucesso! Usuário cadastrado:', novoUsuario);
     } catch (error) {
       console.error('Erro ao cadastrar:', error);
@@ -35,7 +35,7 @@ const Cadastro = () => {
   };
 
   const handleAddCelular = () => {
-    setCelulares([...celulares, '']); // add an empty phone number field
+    setCelulares([...celulares]); // add an empty phone number field
   };
 
   const handleCelularChange = (value : any, index: any) => {
@@ -84,7 +84,7 @@ const Cadastro = () => {
         <View key={index}>
           <TextInput
             placeholder="Celular"
-            value={celular}
+            value={celular.celularN}
             onChangeText={(value) => handleCelularChange(value, index)}
           />
           {index !== 0 && (

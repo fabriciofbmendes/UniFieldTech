@@ -7,3 +7,4 @@ export interface Cliente{
     password : string;
     codigo: string;
 }
+
