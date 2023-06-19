@@ -7,6 +7,24 @@
             "longitude" : -45.9471,
             "hectares" : 10,
             "idUsuario" : "abc"
+        },
+        {
+            "id" : 2,
+            "nome" : "outra-fazenda",
+            "latitude" : -25.4294,
+            "longitude" : -45.9471,
+            "hectares" : 10,
+            "idUsuario" : "abc"
+        },
+        {
+            "id" : 3,
+            "nome" : "another",
+            "latitude" : -25.4294,
+            "longitude" : -25.9471,
+            "hectares" : 10,
+            "idUsuario" : "abc"
         }
+
     ]
+    
 }

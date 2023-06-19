@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button } from 'react-native';
 import axios from 'axios';
+import styles from '../../../styles';
 
 import { postUsuario } from '../../../api';
 import { celular } from '../../../models/celular';
@@ -55,26 +56,30 @@ const Cadastro = () => {
   };
 
   return (
-    <View>
-      <Text>Cadastro</Text>
+    <View style={styles.cadastro}>
+      <Text style={styles.formlabel}>Cadastro</Text>
       <TextInput
+        style={[styles.input,styles.inputform]}
         placeholder="Nome Completo *"
         value={nomeCliente}
         onChangeText={setNome}
       />
       <TextInput
+      style={[styles.input,styles.inputform]}
         placeholder="CPF *"
         value={cpf}
         onChangeText={setCpf}
       />
       <TextInput
-        placeholder="password *"
+      style={[styles.input,styles.inputform]}
+        placeholder="Senha *"
         secureTextEntry
         value={password}
         onChangeText={setpassword}
       />
       <TextInput
-        placeholder="Confirmar password *"
+      style={[styles.input,styles.inputform]}
+        placeholder="Confirmar Senha *"
         secureTextEntry
         value={confirmarpassword}
         onChangeText={setConfirmarpassword}
@@ -102,8 +107,10 @@ const Cadastro = () => {
         placeholder="e_Mail"
         value={e_Mail}
         onChangeText={sete_Mail}
+      style={[styles.input,styles.inputform,{top:10}]}
       />
       <TextInput
+      style={[styles.input,styles.inputform,{top:10}]}
         placeholder="Data de Nascimento *"
         value={dataNacs}
         onChangeText={setdataNacs}
