@@ -8,6 +8,7 @@ import { propsNavigationStack } from "./Models";
 import Fazenda from "../../screens/Fazenda";
 import ClimaRegiao from "../../screens/ClimaRegiao";
 
+import CadastroFazenda from "../../screens/Fazenda/Cadastro";
 const {Navigator,Screen} = createNativeStackNavigator<propsNavigationStack>()
 
 export default function() {
@@ -17,7 +18,7 @@ export default function() {
             <Screen name="Home" component={Home}/>
             <Screen name="Cadastro" component={Cadastro}/>
             <Screen name="Fazenda" component={Fazenda}/>
-            <Screen name="ClimaRegiao" component={ClimaRegiao}/>
+            <Screen name="CadastroFazenda" component={CadastroFazenda}/>
         </Navigator>
     )
 }

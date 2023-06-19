@@ -3,43 +3,49 @@ import { View, Text, TextInput, Button } from 'react-native';
 import axios from 'axios';
 import styles from '../../../styles';
 
+import { postUsuario } from '../../../api';
+import { celular } from '../../../models/celular';
 const Cadastro = () => {
-  const [nome, setNome] = useState('');
+  const [nomeCliente, setNome] = useState('');
   const [cpf, setCpf] = useState('');
-  const [senha, setSenha] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
-  const [celulares, setCelulares] = useState(['']); // array to store phone numbers
-  const [email, setEmail] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
+  const [password, setpassword] = useState('');
+  const [confirmarpassword, setConfirmarpassword] = useState('');
+  const [celulares, setCelulares] = useState<celular[]>([{ celularID: 0, celularN: '', clienteID: 0 }]); // array to store phone numbers
+  const [e_Mail, sete_Mail] = useState('');
+  const [dataNacs, setdataNacs] = useState('');
 
   const handleCadastro = async () => {
+    const codigo = "";
+    const clienteID = 0;
     try {
-      const response = await axios.post('https://sua-api.com/cadastro', {
-        nome,
+      const cliente = {
+        clienteID,
+        nomeCliente,
         cpf,
-        senha,
-        confirmarSenha,
-        celulares,
-        email,
-        dataNascimento,
-      });
-      console.log('Sucesso! Usuário cadastrado:', response.data);
+        e_Mail,
+        dataNacs,
+        password,
+        codigo
+      };
+
+      const novoUsuario = await postUsuario(cliente,confirmarpassword,celulares);
+      console.log('Sucesso! Usuário cadastrado:', novoUsuario);
     } catch (error) {
       console.error('Erro ao cadastrar:', error);
     }
   };
 
   const handleAddCelular = () => {
-    setCelulares([...celulares, '']); // add an empty phone number field
+    setCelulares([...celulares]); // add an empty phone number field
   };
 
-  const handleCelularChange = (value : any, index :any) => {
+  const handleCelularChange = (value : any, index: any) => {
     const updatedCelulares = [...celulares];
     updatedCelulares[index] = value;
     setCelulares(updatedCelulares);
   };
 
-  const handleRemoveCelular = (index : any) => {
+  const handleRemoveCelular = (index: any) => {
     if (celulares.length === 1) {
       return; // Don't allow removing the last celular field
     }
@@ -55,7 +61,7 @@ const Cadastro = () => {
       <TextInput
         style={[styles.input,styles.inputform]}
         placeholder="Nome Completo *"
-        value={nome}
+        value={nomeCliente}
         onChangeText={setNome}
       />
       <TextInput
@@ -68,22 +74,22 @@ const Cadastro = () => {
       style={[styles.input,styles.inputform]}
         placeholder="Senha *"
         secureTextEntry
-        value={senha}
-        onChangeText={setSenha}
+        value={password}
+        onChangeText={setpassword}
       />
       <TextInput
       style={[styles.input,styles.inputform]}
         placeholder="Confirmar Senha *"
         secureTextEntry
-        value={confirmarSenha}
-        onChangeText={setConfirmarSenha}
+        value={confirmarpassword}
+        onChangeText={setConfirmarpassword}
       />
 
-    {celulares.map((celular, index) => (
+      {celulares.map((celular, index) => (
         <View key={index}>
           <TextInput
             placeholder="Celular"
-            value={celular}
+            value={celular.celularN}
             onChangeText={(value) => handleCelularChange(value, index)}
           />
           {index !== 0 && (
@@ -98,16 +104,16 @@ const Cadastro = () => {
       <Button title="Adicionar Celular" onPress={handleAddCelular} />
 
       <TextInput
+        placeholder="e_Mail"
+        value={e_Mail}
+        onChangeText={sete_Mail}
       style={[styles.input,styles.inputform,{top:10}]}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
       />
       <TextInput
       style={[styles.input,styles.inputform,{top:10}]}
         placeholder="Data de Nascimento *"
-        value={dataNascimento}
-        onChangeText={setDataNascimento}
+        value={dataNacs}
+        onChangeText={setdataNacs}
       />
       <Button title="Cadastrar" onPress={handleCadastro} />
     </View>
