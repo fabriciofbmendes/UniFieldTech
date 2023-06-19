@@ -1,8 +1,8 @@
 interface Fazenda {
-    id: number;
-    nome: string;
+    fazendaID: number;
+    nomeFazenda: string;
     latitude: number;
     longitude: number;
-    hectares: number;
-    idUsuario: string;
+    hectar: number;
+    clienteID: string;
   }
