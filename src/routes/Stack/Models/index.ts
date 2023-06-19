@@ -9,6 +9,7 @@ export type propsNavigationStack = {
         longitude: number,
         hectares: number
     }
+    ClimaRegiao : undefined,
     CadastroFazenda : undefined,
 }
 

@@ -52,6 +52,20 @@ export const getClima = async (variavel:string,data:string,latitude:number,longi
   }
 };
 
+const getTemp = async (latitude : number, longitude : number) => {
+  latitude = -22.817829579132503
+  longitude = -47.06143527737295
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&current_weather=true&forecast_days=1&timezone=America%2FSao_Paulo`;
+
+  try {
+    const response = await axios.get(url);
+    //setData(response.data);
+    console.log(response.data.current_weather);
+  } catch (error) {
+    console.error('Error fetching temperature:', error);
+  }
+};
+
 export const postUsuario = async (cliente: Cliente,confirmPassword : string,celulares : celular[]) => {
   try {
     cliente.dataNacs = "2023-06-18";
