@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, ImageBackground,  Button, StyleSheet } from 'react-native';
+import { View, TextInput, Text, ImageBackground, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import styles from '../../../styles';
 import { useNavigation } from '@react-navigation/native';
 import { propsStack } from '../../../routes/Stack/Models';
 import { loginUser } from '../../../api';
-import { TouchableOpacity } from 'react-native';
-
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -20,17 +18,17 @@ const LoginScreen = () => {
     };
     const result = await loginUser(cliente);
     console.log(result);
-    if(result == "success"){
-      navigation.navigate("Home");
+    if (result === 'success') {
+      navigation.navigate('Home');
     }
-  
+  };
+
   const handleSignUp = () => {
-    navigation.navigate("Cadastro");
+    navigation.navigate('Cadastro');
   };
 
   return (
     <View style={styles.container}>
-      
       <ImageBackground source={require('../../img/fundo-login.jpg')} style={styles.fundo}>
         <Text style={styles.title}>AgrofieldTech</Text>
         <TextInput
@@ -47,17 +45,11 @@ const LoginScreen = () => {
           value={password}
         />
         <View style={styles.buttondiv}>
-          <TouchableOpacity 
-            style={styles.button}
-            onPress={handleLogin}
-          >
-            <Text >Login</Text>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text>Login</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleSignUp}
-            style={styles.button}
-          >
-            <Text >Cadastrar</Text>
+          <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+            <Text>Cadastrar</Text>
           </TouchableOpacity>
         </View>
       </ImageBackground>
@@ -66,6 +58,3 @@ const LoginScreen = () => {
 };
 
 export default LoginScreen;
-
-
-
