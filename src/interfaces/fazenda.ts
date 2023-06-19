@@ -1,4 +1,4 @@
-interface Fazenda {
+export interface Fazenda {
     id: number;
     nome: string;
     latitude: number;

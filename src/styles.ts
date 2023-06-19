@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     textAlign:'center',
     alignItems:'center',
     padding:10,
-    borderRadius:8,
+    borderRadius:8 , 
     
   },
   buttondiv: {
@@ -75,20 +75,40 @@ const styles = StyleSheet.create({
 
   },
   card:{
-    width:'75%',
+    width:'80%',
     height:300,
     alignItems:'center',
     borderStyle:'solid',
     borderWidth:5,
+    borderRadius:20,
+    borderTopRightRadius:25,
     borderColor:'#D3D3D3',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.9,
     shadowRadius: 4,
-    elevation: 4,
+    elevation: 0,
+    gap:10,
+    justifyContent:'flex-end',
+    bottom:10
+    
   },
-  buttonhome:{
-    top:'70%',
+  buttons:{
+    bottom:20,
+    height:50,
+    width:'100%',
+    left:'50%',
+  
+    alignSelf: 'center'
+  },
+  buttoninfo: {
+    backgroundColor:'#7CFC00',
+    width:'100%',
+    textAlign:'center',
+    alignItems:'center',
+    padding:10,
+    borderRadius:8 , 
+    
   },
   cadastro:{
     paddingHorizontal:50,

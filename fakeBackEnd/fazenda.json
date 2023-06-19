@@ -2,7 +2,7 @@
     "fazendas":[
         {
             "id" : 1,
-            "nome" : "minhaFazenda",
+            "nome" : "Alfenas",
             "latitude" : -21.4294,
             "longitude" : -45.9471,
             "hectares" : 10,
@@ -10,18 +10,18 @@
         },
         {
             "id" : 2,
-            "nome" : "outra-fazenda",
-            "latitude" : -25.4294,
-            "longitude" : -45.9471,
-            "hectares" : 10,
+            "nome" : "Pará",
+            "latitude" : -6.2002841695578885,
+            "longitude" : -51.933721097922636,
+            "hectares" : 100,
             "idUsuario" : "abc"
         },
         {
             "id" : 3,
-            "nome" : "another",
-            "latitude" : -25.4294,
-            "longitude" : -25.9471,
-            "hectares" : 10,
+            "nome" : "Brasilia",
+            "latitude" : -15.283879657723212,
+            "longitude" : -48.293716457370984,
+            "hectares" : 35,
             "idUsuario" : "abc"
         }
 

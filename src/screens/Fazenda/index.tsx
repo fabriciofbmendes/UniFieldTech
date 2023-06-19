@@ -6,6 +6,7 @@ import { useNavigation,useRoute } from '@react-navigation/native';
 const Fazenda = () => { 
     const route = useRoute();
     const { latitude, longitude, hectares } = route.params as FazendaMapa;
+    console.log(Math.sqrt(hectares) * 100)
     return (
       <View style={styles.container}>
         <MapView
@@ -13,8 +14,8 @@ const Fazenda = () => {
           initialRegion={{
             latitude,
             longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.02,
           }}
         >
           <Circle
