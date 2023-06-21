@@ -30,14 +30,14 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <ImageBackground source={require('../../img/fundo-login.jpg')} style={styles.fundo}>
-        <Text style={styles.title}>AgrofieldTech</Text>
+        <Text style={{bottom:80,fontSize:25,alignSelf:'center'}}>AgrofieldTech</Text>
         <TextInput
           style={styles.input}
           placeholder="Email"
           onChangeText={text => setEmail(text)}
           value={email}
         />
-        <TextInput
+        <TextInput 
           style={styles.input}
           placeholder="Senha"
           secureTextEntry
