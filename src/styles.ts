@@ -33,7 +33,7 @@ import { StyleSheet } from 'react-native';
     },
     input: {
       width: '75%',
-      height: 40,
+      height: 60,
       marginBottom: 12,
       borderColor: 'gray',
       borderWidth: 1,
@@ -44,6 +44,33 @@ import { StyleSheet } from 'react-native';
       borderEndColor:'black',
       position:'relative',
     },
+    inputsenha:{
+     width:"85%",
+      height: 58,
+      marginBottom: 12,
+      borderColor: 'gray',
+      borderWidth: 0,
+      paddingHorizontal: 8,
+      backgroundColor:'white',
+      borderStyle: 'solid',
+      borderRadius:10,
+      borderEndColor:'black',
+      position:'relative',
+      top:6,
+    },
+    senhadiv:{
+      width:"75%",
+      height:60,
+      marginBottom: 12,
+      flexDirection:'row',
+      alignItems:'center',
+      justifyContent:'center',
+      backgroundColor:"#FFF",
+      borderEndColor:'black',
+      borderStyle: 'solid',
+      borderRadius:10,
+      borderWidth:1,
+    },
     text: {
       fontSize: 24,
       fontWeight: 'bold',
@@ -53,9 +80,9 @@ import { StyleSheet } from 'react-native';
       width:'50%',
       textAlign:'center',
       alignItems:'center',
-      padding:10,
       borderRadius:8 , 
-      
+      justifyContent:'center',
+      height:50,
     },
     buttondiv: {
       width:'50%',
@@ -128,7 +155,7 @@ import { StyleSheet } from 'react-native';
       display:'flex',
       flex:1,
       justifyContent:'center',
-      gap:10,
+      gap:3,
       
     },
     inputform:{
@@ -138,6 +165,14 @@ import { StyleSheet } from 'react-native';
       borderTopWidth:0,
       borderRightWidth:0,
       borderLeftWidth:0,
+    },
+    inputsenhacadastro:{
+      borderBottomRightRadius:0,
+      borderBottomLeftRadius:0,
+      borderTopWidth:0,
+      borderRightWidth:0,
+      borderLeftWidth:0,
+      marginBottom: 12,
     },
     formlabel:{
       bottom:50,

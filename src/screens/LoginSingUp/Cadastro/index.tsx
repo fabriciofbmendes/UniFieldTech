@@ -1,11 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, Button, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import styles from '../../../styles';
 import { TextInputMask } from 'react-native-masked-text';
 
 import { postUsuario } from '../../../api';
 import { celular } from '../../../models/celular';
+import { Ionicons } from '@expo/vector-icons'
+
 const Cadastro = () => {
   const [nomeCliente, setNome] = useState('');
   const [cpf, setCpf] = useState('');
@@ -15,7 +17,8 @@ const Cadastro = () => {
   const [e_Mail, sete_Mail] = useState('');
   const [dataNacs, setdataNacs] = useState('');
   const cpfref = useRef(null);
-
+  const [hidepass, sethidepass] = useState(true);
+  const [hidepassconfirma, sethidepassconfirma] = useState(true);
   const handleCadastro = async () => {
     const codigo = "";
     const clienteID = 0;
@@ -77,20 +80,38 @@ const Cadastro = () => {
           onChangeText={setCpf}
           ref={cpfref}
         />
+        <View style={[styles.inputsenhacadastro,{flexDirection:'row',backgroundColor:"#FFF",alignItems:'center',borderRadius:10,borderBottomColor:'#000',borderWidth:1,height:60}]}>
+          <TextInput
+          style={[styles.inputsenha,styles.inputsenhacadastro]}
+            placeholder="Senha *"
+            secureTextEntry={hidepass}
+            value={password}
+            onChangeText={setpassword}
+          />
+          <TouchableOpacity style={{width:"15%"}} onPress={()=> sethidepass(!hidepass)}>
+            { hidepass ?
+              <Ionicons name="eye" color="#000" size={25}></Ionicons>
+              :
+              <Ionicons name="eye-off" color="#000" size={25}></Ionicons>
+            }
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.inputsenhacadastro,{flexDirection:'row',backgroundColor:"#FFF",alignItems:'center',borderRadius:10,borderBottomColor:'#000',borderWidth:1,height:60}]}>
         <TextInput
-        style={[styles.input,styles.inputform]}
-          placeholder="Senha *"
-          secureTextEntry
-          value={password}
-          onChangeText={setpassword}
-        />
-        <TextInput
-        style={[styles.input,styles.inputform]}
+        style={[styles.inputsenha,styles.inputsenhacadastro]}
           placeholder="Confirmar Senha *"
-          secureTextEntry
+          secureTextEntry={hidepassconfirma}
           value={confirmarpassword}
           onChangeText={setConfirmarpassword}
         />
+        <TouchableOpacity style={{width:"15%"}} onPress={()=> sethidepassconfirma(!hidepassconfirma)}>
+            { hidepassconfirma ?
+              <Ionicons name="eye" color="#000" size={25}></Ionicons>
+              :
+              <Ionicons name="eye-off" color="#000" size={25}></Ionicons>
+            }
+          </TouchableOpacity>
+        </View>
 
         {celulares.map((celular, index) => (
           <View key={index}>
@@ -119,7 +140,7 @@ const Cadastro = () => {
         style={[styles.input,styles.inputform,{top:10}]}
         />
         <TextInputMask
-        style={[styles.input,styles.inputform,{top:10}]}
+        style={[styles.input,styles.inputform,{top:10,marginBottom:30}]}
         type={'datetime'}
         options={{
           format: 'DD/MM/YYYY'
