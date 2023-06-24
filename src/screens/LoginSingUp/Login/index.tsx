@@ -24,7 +24,7 @@ const LoginScreen = () => {
   };
 
   const handleSignUp = () => {
-    navigation.navigate('ClimaRegiao');
+    navigation.navigate('Cadastro');
   };
 
   return (
