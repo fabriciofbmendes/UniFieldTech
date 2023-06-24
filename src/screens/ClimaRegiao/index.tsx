@@ -3,29 +3,88 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, FlatList }
 import axios from 'axios';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+type CityDetail = {
+  name: string;
+  temperatura: string;
+  dias: string;
+  velVento: string;
+  tempMax: string;
+  tempMin: string;
+  precipitation: string;
+  lat: string | undefined;
+  long: string | undefined;
+};  
+type tempoDia = {
+  dia : string;
+  temperaturaMax: string;
+  temperaturaMin: string;
+  probabilidadeChuva: string,
+};
 
 const ClimaRegiao = () => {
   const route = useRoute();
-  const [data, setData] = useState({});
-  const [cityDetais, setCityDetais] = useState({});
-  const [location, setLocation] = useState('');
+  const [data, setData] = useState<{
+    current_weather?: {
+      temperature?: string;
+      windspeed?: string;
+      // Outras propriedades relacionadas ao clima atual
+    };
+    daily?: {
+      time?: string[];
+      temperature_2m_max?: string[];
+      temperature_2m_min?: string[];
+      precipitation_probability_max?: string[];
+      // Outras propriedades relacionadas ao clima diário
+    };
+  }>({});
 
+  const [tempoDia, setTempoDia] = useState<tempoDia>({
+    dia: "",
+    temperaturaMax: "",
+    temperaturaMin: "",
+    probabilidadeChuva: "",
+  });
+  
+  const [dataCity, setDataCity] = useState<{
+
+    latLng?: {
+      lat?: string;
+      lng?: string;
+    }
+  }>({});
+
+
+  const [cityDetais, setCityDetais] = useState<CityDetail>({
+    name: "",
+    dias: "",
+    temperatura: "",
+    velVento: "",
+    tempMax: "",
+    tempMin: "",
+    precipitation: "",
+    lat: "",
+    long: ""
+  });
+  const [cachedCityList, setCachedCityList] = useState<CityDetail[]>([]);
   const [city, setCity] = useState('');
-  const [cityList, setCityList] = useState([]);
+  const [cityList, setCityList] = useState<CityDetail[]>([]);
   const [intervalId, setIntervalId] = useState<number | null>(null);
   
   useEffect(() => {
     // Inicia o intervalo de atualização a cada um minuto (60 segundos)
     const id = setInterval(async () => {
-      const updatedCityDetails = [...cityDetais];
+      const updatedCityDetails = [...cityList];
       for (let i = 0; i < updatedCityDetails.length; i++) {
         const cityDetail = updatedCityDetails[i];
-        const latitude = cityDetail.results[0].locations[0].latLng.lat;
-        const longitude = cityDetail.results[0].locations[0].latLng.lng;
+        const latitude = cityDetail.lat;
+        const longitude = String(cityDetail.long);
         await getTemp(latitude, longitude);
       }
-      setCityDetais(updatedCityDetails);
-    }, 60 * 1000); // 60 segundos em milissegundos
+      setCityList(updatedCityDetails);
+      setCachedCityList(updatedCityDetails);
+    }, 60 * 1000); 
   
     // Encerra o intervalo quando o componente for desmontado
     return () => {
@@ -35,7 +94,25 @@ const ClimaRegiao = () => {
     };
   }, [cityDetais]);
 
-  const getTemp = async (latitude : string, longitude : string) => {
+  useEffect(() => {
+    const loadCachedCityList = async () => {
+      try {
+        const cachedData = await AsyncStorage.getItem('cityDetails');
+        if (cachedData) {
+          const parsedData = JSON.parse(cachedData);
+          setCachedCityList(parsedData);
+          setCityList(parsedData);
+        }
+      } catch (error) {
+        console.error('Error loading cached city list:', error);
+      }
+    };
+  
+    loadCachedCityList();
+  }, []);
+  
+
+  const getTemp = async (latitude: string | undefined, longitude: string | undefined) => {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,precipitation,windspeed_10m,winddirection_10m,temperature_925hPa,relativehumidity_925hPa,windspeed_925hPa&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,uv_index_clear_sky_max,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=America%2FSao_Paulo`;
     try {
       const response = await axios.get(url);
@@ -50,35 +127,41 @@ const ClimaRegiao = () => {
     const url = `https://www.mapquestapi.com/geocoding/v1/address?key=nQqONaeF5h2qylUmCjdyjH4wDeTLElmW&location=${city}`;
     try {
       const response = await axios.get(url);
-      setCityDetais(response.data);
-      //console.log(response.data.results[0].locations[0].latLng);
+      
+      setDataCity(response.data.results[0].locations[0]);
+      console.log(response.data.results[0]);
     } catch (error) {
-      console.error('Error fetchinfg City:', error);
+      console.error('Error fetching City:', error);
     }
   };
 
-  const handleAddCity = (cityName: string) => {
+  const handleAddCity = async (cityName: string) => {
     if (cityName) {
-      getCity(cityName);
-      const latitude = cityDetais.results[0].locations[0].latLng.lat; // Inserir lógica para obter latitude
-      const longitude = cityDetais.results[0].locations[0].latLng.lng;
-      getTemp(latitude, longitude);
-      
-      const newCity = {
+      await getCity(cityName);
+      const latitude = dataCity.latLng?.lat;
+      const longitude = dataCity.latLng?.lng;
+      await getTemp(latitude, longitude);
+  
+      const newCity: CityDetail = {
         name: cityName,
-        temperatura: data.current_weather.temperature, // Inserir lógica para obter temperatura
-        VelVento: data.current_weather.windspeed,
-        tempMax: data.daily.temperature_2m_max[0],
-        tempMin: data.daily.temperature_2m_min[0], 
-        precipitation : calcularMedia(data.daily.precipitation_probability_max),
-      };     
+        temperatura: data.current_weather?.temperature || "",
+        velVento: data.current_weather?.windspeed || "",
+        
+        dias : data.daily?.time?.join(";") || "",
+        tempMax: data.daily?.temperature_2m_max?.join("; ") || "", // Armazena todas as posições em uma string separada por vírgula
+        tempMin: data.daily?.temperature_2m_min?.join("; ") || "", // Armazena todas as posições em uma string separada por vírgula
+        precipitation: data.daily?.precipitation_probability_max?.join("; ") || "", // Armazena todas as posições em uma string separada por vírgula
+        lat: latitude,
+        long: longitude,
+      };
+  
       console.log(newCity);
       setCityList([...cityList, newCity]);
+      await AsyncStorage.setItem('cityDetails', JSON.stringify([...cityList, newCity]));
       setCity('');
-    };
-    
-    
+    }
   };
+  
   const calcularMedia = (array: number[]) => {
 
     if (!array || array.length === 0) {
@@ -92,15 +175,16 @@ const ClimaRegiao = () => {
     return media.toFixed(1); //
   };
 
-  const renderCityItem = ({item } : any) => {
+  const renderCityItem = ({ item }: { item: CityDetail }) => {
     return (
       <View style={{ padding: 10 }}>
         <Text>{item.name}</Text>
-        <Text>Temperatura Atual:  {item.temperatura}</Text>
-        <Text>Temperatura Maxima: {item.tempMax}</Text>
-        <Text>Temperatura Minima: {item.tempMin}</Text>
-        <Text>Precipitação:       {item.VelVento}</Text>
-        <Text>Velocide do Vento:  {item.VelVento}</Text>
+        <Text>Temperatura Atual: {item.temperatura}</Text>
+        <Text>Dias: {item.dias}</Text>
+        <Text>Temperatura Máxima: {item.tempMax}</Text>
+        <Text>Temperatura Mínima: {item.tempMin}</Text>
+        <Text>Precipitação: {item.precipitation}</Text>
+        <Text>Velocidade do Vento: {item.velVento}</Text>
       </View>
     );
   };
