@@ -11,6 +11,11 @@ interface Estado {
     label: string;
     value: string;
   }
+  
+  interface Plantio{
+  label: string;
+  value: string;
+}
 
 const CadastroFazenda = () => {
   const [nomeFazenda, setNomeFazenda] = useState('');
@@ -27,7 +32,10 @@ const CadastroFazenda = () => {
     { label: 'Amapá', value: 'AP' },
     { label: 'Minas Gerais', value: 'MG' },
   ]);
-
+const [plantios, setplantios] = useState<Plantio[]>([
+    { label: 'Cafe', value: 'Cafe' },
+    { label: 'Soja', value: 'Soja' },
+  ]);
   
   const navigation = useNavigation<propsStack>();
   
@@ -78,11 +86,14 @@ const CadastroFazenda = () => {
         onChangeText={text => setHectar(text)}
         value={hectar}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Cultivar"
-        onChangeText={text => setCultivar(text)}
+      <DropDownPicker
+        open={open}
         value={cultivar}
+        items={plantios}
+        setOpen={setOpen}
+        setValue={setCultivar}
+        style={pickerStyle}
+        setItems={setplantios}
       />
       <TextInput
         style={styles.input}
