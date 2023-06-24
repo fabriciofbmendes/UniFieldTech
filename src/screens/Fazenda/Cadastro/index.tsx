@@ -55,6 +55,7 @@ const [plantios, setplantios] = useState<Plantio[]>([
         areaMecanizada: true,
         clienteID: await getUserId(),
     };
+    console.log(fazenda.clienteID);
     try {
         const coordinates = await getCoordinates(`${rua}, ${num}, ${cidade}, ${estado}`);
         fazenda.latitude = coordinates.latitude;
