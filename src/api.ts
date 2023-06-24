@@ -7,12 +7,12 @@ import {fazendaCadastro} from './interfaces/fazendaCadastro';
 import {temperaturas} from './models/temperaturas';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 let TokenAutorizado: string | null;
-const API_URL = 'http://192.168.1.2:5141';
+const API_URL = 'http://192.168.1.7:5141';
 
-export const getFazendasDoUsuario = async (clienteID:string) => {
+export const getFazendasDoUsuario = async (cpf:string) => {
     try {
       TokenAutorizado = await AsyncStorage.getItem('authToken');
-      const response = await axios.get(`${API_URL}/api/Fazenda`, {
+      const response = await axios.get(`${API_URL}/api/Fazenda/buscar/cliente/cpf/${cpf}`, {
         headers: {
           Authorization: `Bearer ${TokenAutorizado}`,
           Accept: 'application/json'
@@ -75,16 +75,16 @@ export const postUsuario = async (cliente: Cliente,confirmPassword : string) => 
       "password" : cliente.password,
       "confirmPassword": confirmPassword
     }
-    await axios.post('http://192.168.1.2:5141/api/Values/CreateUser', clientUser);
+    await axios.post('http://192.168.1.7:5141/api/Values/CreateUser', clientUser);
 
     // if(result == null)
     //   return;
-    await axios.post('http://192.168.1.2:5141/api/Cliente', cliente);
+    await axios.post('http://192.168.1.7:5141/api/Cliente', cliente);
     // const clienteID : any =
     // if(clienteID != 0){
     //   celulares.forEach(async celular => {
     //     celular.clienteID = clienteID;
-    //     await axios.post('http://192.168.1.2:5141/api/Celular', celular);
+    //     await axios.post('http://192.168.1.7:5141/api/Celular', celular);
     //   });
     // }
     return;
@@ -97,7 +97,7 @@ export const postUsuario = async (cliente: Cliente,confirmPassword : string) => 
 export const cadastrarFazenda = async (fazenda : fazendaCadastro) => {
   TokenAutorizado = await AsyncStorage.getItem('authToken');
     try {
-    const response = await axios.post('http://192.168.1.2:5141/api/Fazenda', fazenda, {
+    const response = await axios.post('http://192.168.1.7:5141/api/Fazenda', fazenda, {
       headers: {
         Authorization: `Bearer ${TokenAutorizado}`,
         Accept: 'application/json'
@@ -120,7 +120,7 @@ export const cadastrarFazenda = async (fazenda : fazendaCadastro) => {
 
 export const loginUser = async (cliente: LoginUser) => {
   try {
-    const response = await axios.post('http://192.168.1.2:5141/api/Values/LoginUser', cliente);
+    const response = await axios.post('http://192.168.1.7:5141/api/Values/LoginUser', cliente);
     if (response.data && response.data.token) {
       const authToken = response.data.token;
       await AsyncStorage.setItem('authToken', authToken);
@@ -151,6 +151,37 @@ export const getUserId = async () => {
     return null;
   }
 };
+
+export const getUserCpf = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/Values/cpf`, {
+      headers: {
+        Authorization: `Bearer ${TokenAutorizado}`,
+      },
+    });
+    const userCpf = response.data;
+    return userCpf;
+  } catch (error) {
+    console.error('Erro ao obter o ID do usuário:', error);
+    return null;
+  }
+};
+
+export const PupularDropdownPlantacao = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/Fazenda/plantacoes`, {
+      headers: {
+        Authorization: `Bearer ${TokenAutorizado}`,
+      },
+    });
+    const plantacoes = response.data;
+    return plantacoes;
+  } catch (error) {
+    console.error('Erro ao obter o ID do usuário:', error);
+    return null;
+  }
+};
+
 
 
 export async function getCoordinates(address: string): Promise<{ latitude: string; longitude: string }> {
