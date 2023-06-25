@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import axios from 'axios';
 import stilo from '../../styles';
-import { getClima, getFazendasDoUsuario, getUserId } from '../../api';
+import { getClima, getFazendasDoUsuario, getUserCpf } from '../../api';
 import { useNavigation } from '@react-navigation/native';
 import { propsStack } from '../../routes/Stack/Models';
 import { HumidadeAcimaDoSolo } from '../../interfaces/climApiVariables';
 import moment from 'moment';
+import styles from '../../styles';
 
 
 const Home = () => {
@@ -16,9 +17,11 @@ const Home = () => {
   const [clima, setClima] = useState<[]>([]);
   useEffect(() => {
     const fetchFazendas = async () => {
+      const response = JSON.stringify(await getFazendasDoUsuario(await getUserCpf()));
       try {
-        const response = JSON.stringify(await getFazendasDoUsuario(await getUserId()));
-        setFazendas(JSON.parse(response));
+        if(response != null && response !== undefined) {
+          setFazendas(JSON.parse(response));
+        }
       } catch (error) {
         console.error('Erro ao obter fazendas:', error);
       }
@@ -30,35 +33,71 @@ const Home = () => {
   const handleFazendaClick = async (fazenda: Fazenda) => {
     // Navegar para a tela do mapa e passar os valores da fazenda
     const clima = JSON.stringify(await getClima(HumidadeAcimaDoSolo,currentDate,fazenda.longitude,fazenda.latitude));
-    
     navigation.navigate("Fazenda", {
       latitude: fazenda.latitude,
       longitude: fazenda.longitude,
-      hectares: fazenda.hectar,
+      hectar: fazenda.hectar,
     });
   };
-
+  const handleInformacoes = () => {
+    navigation.navigate('CalendarioClima');
+  }
 
   const handleCadastrarFazenda = () => {
     // Navegar para a tela de cadastro de fazenda
     navigation.navigate('CadastroFazenda');
   };
 
+
   return (
-    <View>
-    <TouchableOpacity onPress={handleCadastrarFazenda}>
-        <Text>Cadastrar Fazenda</Text>
-      </TouchableOpacity>
-      {fazendas.map((fazenda) => (
-        <TouchableOpacity
-          key={fazenda.fazendaID}
-          onPress={() => handleFazendaClick(fazenda)}
-        >
-          <Text>{fazenda.nomeFazenda}</Text>
+    <ScrollView>
+      <View style={styles.home}>
+        <Text style={{ fontSize: 20, top: 20 }}>Minhas Fazendas</Text>
+        {fazendas.map((fazenda: Fazenda) => (
+          <View key={fazenda.fazendaID} style={styles.card}>
+            <ImageBackground
+              imageStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
+              source={require('../img/fundo-login.jpg')}
+              style={styles.fundocard}
+            ></ImageBackground>
+            <Text style={{ top: 10, fontSize: 20 }}>{fazenda.nomeFazenda}</Text>
+            <View style={{ flexDirection: 'row', gap: 30, top: 10 }}>
+              <View style={{ flexDirection: 'column', top: 20 }}>
+                <View style={styles.buttons}>
+                  <TouchableOpacity
+                    style={[styles.buttoninfo]}
+                    onPress={() => handleFazendaClick(fazenda)}
+                  >
+                    <Text>Ver Região</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.buttons}>
+                  <TouchableOpacity
+                    style={[styles.buttoninfo]}
+                    onPress={() => handleInformacoes()}
+                  >
+                    <Text>Saiba Mais</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={{ flexDirection: 'column', width: '75%', gap: 10, flexWrap: 'wrap', paddingLeft: 70 }}>
+                <Text>Temperatura: 80</Text>
+                <Text>Humidade: 80</Text>
+                <Text>Temperatura: 80</Text>
+                <Text>Humidade: 80</Text>
+              </View>
+            </View>
+          </View>
+        ))}
+        <TouchableOpacity style={[styles.button, styles.buttoncria]} onPress={handleCadastrarFazenda}>
+          <Text>Adcicionar Fazenda</Text>
         </TouchableOpacity>
-      ))}
-    </View>
+      </View>
+    </ScrollView>
   );
+
+
+
 };
 
 export default Home;

@@ -2,7 +2,7 @@ export interface fazendaCadastro {
     fazendaID: number;
     nomeFazenda: string;
     hectar: string;
-    cultivar: string;
+    PlantacaoId: number;
     rua?: string;
     num?: string;
     cidade?: string;
@@ -11,5 +11,6 @@ export interface fazendaCadastro {
     longitude?: string;
     tipoPlantio: boolean;
     areaMecanizada: boolean;
-    clienteID: string;
+    clienteIdUser: string;
+    clienteID : number;
   }

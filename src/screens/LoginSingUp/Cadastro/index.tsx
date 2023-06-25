@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import styles from '../../../styles';
+import { TextInputMask } from 'react-native-masked-text';
 
 import { postUsuario } from '../../../api';
 import { celular } from '../../../models/celular';
+import { Ionicons } from '@expo/vector-icons'
+import { propsStack } from '../../../routes/Stack/Models';
+import { useNavigation } from '@react-navigation/native';
 const Cadastro = () => {
   const [nomeCliente, setNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [password, setpassword] = useState('');
   const [confirmarpassword, setConfirmarpassword] = useState('');
-  const [celulares, setCelulares] = useState<celular[]>([{ celularID: 0, celularN: '', clienteID: 0 }]); // array to store phone numbers
+  const [CelularN, setCelular] = useState('');
   const [e_Mail, sete_Mail] = useState('');
   const [dataNacs, setdataNacs] = useState('');
-
+  const cpfref = useRef(null);
+  const [hidepass, sethidepass] = useState(true);
+  const [hidepassconfirma, sethidepassconfirma] = useState(true);
+  const navigation = useNavigation<propsStack>();
   const handleCadastro = async () => {
     const codigo = "";
     const clienteID = 0;
@@ -22,101 +29,99 @@ const Cadastro = () => {
         clienteID,
         nomeCliente,
         cpf,
+        CelularN,
         e_Mail,
         dataNacs,
         password,
         codigo
       };
 
-      const novoUsuario = await postUsuario(cliente,confirmarpassword,celulares);
+      const novoUsuario = await postUsuario(cliente,confirmarpassword);
       console.log('Sucesso! Usuário cadastrado:', novoUsuario);
+      navigation.navigate('Login');
     } catch (error) {
       console.error('Erro ao cadastrar:', error);
     }
   };
 
-  const handleAddCelular = () => {
-    setCelulares([...celulares]); // add an empty phone number field
-  };
-
-  const handleCelularChange = (value : any, index: any) => {
-    const updatedCelulares = [...celulares];
-    updatedCelulares[index] = value;
-    setCelulares(updatedCelulares);
-  };
-
-  const handleRemoveCelular = (index: any) => {
-    if (celulares.length === 1) {
-      return; // Don't allow removing the last celular field
-    }
-
-    const updatedCelulares = [...celulares];
-    updatedCelulares.splice(index, 1);
-    setCelulares(updatedCelulares);
-  };
-
   return (
-    <View style={styles.cadastro}>
-      <Text style={styles.formlabel}>Cadastro</Text>
-      <TextInput
+    <ScrollView>
+      <View style={[styles.cadastro]}>
+        <Text style={[styles.formlabel,styles.titlecadastro]}>Cadastro</Text>
+        <TextInput
+          style={[styles.input,styles.inputform]}
+          placeholder="Nome Completo *"
+          value={nomeCliente}
+          onChangeText={setNome}
+        />
+        <TextInputMask
         style={[styles.input,styles.inputform]}
-        placeholder="Nome Completo *"
-        value={nomeCliente}
-        onChangeText={setNome}
-      />
-      <TextInput
-      style={[styles.input,styles.inputform]}
-        placeholder="CPF *"
-        value={cpf}
-        onChangeText={setCpf}
-      />
-      <TextInput
-      style={[styles.input,styles.inputform]}
-        placeholder="Senha *"
-        secureTextEntry
-        value={password}
-        onChangeText={setpassword}
-      />
-      <TextInput
-      style={[styles.input,styles.inputform]}
-        placeholder="Confirmar Senha *"
-        secureTextEntry
-        value={confirmarpassword}
-        onChangeText={setConfirmarpassword}
-      />
-
-      {celulares.map((celular, index) => (
-        <View key={index}>
+        type={'cpf'}
+          placeholder="CPF *"
+          value={cpf}
+          onChangeText={setCpf}
+          ref={cpfref}
+        />
+        <View style={[styles.inputsenhacadastro,{flexDirection:'row',backgroundColor:"#FFF",alignItems:'center',borderRadius:10,borderBottomColor:'#000',borderWidth:1,height:60}]}>
           <TextInput
-            placeholder="Celular"
-            value={celular.celularN}
-            onChangeText={(value) => handleCelularChange(value, index)}
+          style={[styles.inputsenha,styles.inputsenhacadastro]}
+            placeholder="Senha *"
+            secureTextEntry={hidepass}
+            value={password}
+            onChangeText={setpassword}
           />
-          {index !== 0 && (
-            <Button
-              title="Remover Celular"
-              onPress={() => handleRemoveCelular(index)}
-            />
-          )}
+          <TouchableOpacity style={{width:"15%"}} onPress={()=> sethidepass(!hidepass)}>
+            { hidepass ?
+              <Ionicons name="eye" color="#000" size={25}></Ionicons>
+              :
+              <Ionicons name="eye-off" color="#000" size={25}></Ionicons>
+            }
+          </TouchableOpacity>
         </View>
-      ))}
-      {/* Button to add new celular number input field */}
-      <Button title="Adicionar Celular" onPress={handleAddCelular} />
+        <View style={[styles.inputsenhacadastro,{flexDirection:'row',backgroundColor:"#FFF",alignItems:'center',borderRadius:10,borderBottomColor:'#000',borderWidth:1,height:60}]}>
+        <TextInput
+        style={[styles.inputsenha,styles.inputsenhacadastro]}
+          placeholder="Confirmar Senha *"
+          secureTextEntry={hidepassconfirma}
+          value={confirmarpassword}
+          onChangeText={setConfirmarpassword}
+        />
+        <TouchableOpacity style={{width:"15%"}} onPress={()=> sethidepassconfirma(!hidepassconfirma)}>
+            { hidepassconfirma ?
+              <Ionicons name="eye" color="#000" size={25}></Ionicons>
+              :
+              <Ionicons name="eye-off" color="#000" size={25}></Ionicons>
+            }
+          </TouchableOpacity>
+        </View>
 
-      <TextInput
-        placeholder="e_Mail"
-        value={e_Mail}
-        onChangeText={sete_Mail}
+        <TextInput
+        placeholder="Numero do Celular"
+        value={CelularN}
+        onChangeText={setCelular}
       style={[styles.input,styles.inputform,{top:10}]}
       />
-      <TextInput
-      style={[styles.input,styles.inputform,{top:10}]}
-        placeholder="Data de Nascimento *"
-        value={dataNacs}
-        onChangeText={setdataNacs}
-      />
-      <Button title="Cadastrar" onPress={handleCadastro} />
-    </View>
+        
+        <TextInput
+          placeholder="e_Mail"
+          value={e_Mail}
+          onChangeText={sete_Mail}
+        style={[styles.input,styles.inputform,{top:10}]}
+        />
+        <TextInputMask
+        style={[styles.input,styles.inputform,{top:10,marginBottom:30}]}
+        type={'datetime'}
+        options={{
+          format: 'DD/MM/YYYY'
+        }}
+          placeholder="Data de Nascimento *"
+          value={dataNacs}
+          onChangeText={setdataNacs}
+          
+        />
+        <Button title="Cadastrar" onPress={handleCadastro} />
+      </View>
+    </ScrollView>
   );
 };
 

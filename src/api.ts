@@ -4,14 +4,15 @@ import { LoginUser } from './models/loginUser';
 import { celular } from './models/celular';
 import * as Location from 'expo-location';
 import {fazendaCadastro} from './interfaces/fazendaCadastro';
+import {temperaturas} from './models/temperaturas';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 let TokenAutorizado: string | null;
-const API_URL = 'http://192.168.1.2:5141';
+const API_URL = 'http://192.168.1.7:5141';
 
-export const getFazendasDoUsuario = async (clienteID:string) => {
+export const getFazendasDoUsuario = async (cpf:string) => {
     try {
       TokenAutorizado = await AsyncStorage.getItem('authToken');
-      const response = await axios.get(`${API_URL}/api/Fazenda`, {
+      const response = await axios.get(`${API_URL}/api/Fazenda/buscar/cliente/cpf/${cpf}`, {
         headers: {
           Authorization: `Bearer ${TokenAutorizado}`,
           Accept: 'application/json'
@@ -55,36 +56,35 @@ export const getClima = async (variavel:string,data:string,latitude:number,longi
 const getTemp = async (latitude : number, longitude : number) => {
   latitude = -22.817829579132503
   longitude = -47.06143527737295
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&current_weather=true&forecast_days=1&timezone=America%2FSao_Paulo`;
-
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}1&hourly=relativehumidity_2m,precipitation_probability,precipitation,rain,cloudcover,windspeed_10m,winddirection_10m,temperature_80m,uv_index,uv_index_clear_sky,temperature_925hPa,relativehumidity_925hPa,cloudcover_925hPa,windspeed_925hPa,winddirection_925hPa&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,uv_index_clear_sky_max,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant&current_weather=true&timezone=America%2FSao_Paulo`
   try {
     const response = await axios.get(url);
-    //setData(response.data);
+    // const dados = temperaturas;
     console.log(response.data.current_weather);
+    return response.data;
   } catch (error) {
     console.error('Error fetching temperature:', error);
   }
 };
 
-export const postUsuario = async (cliente: Cliente,confirmPassword : string,celulares : celular[]) => {
+export const postUsuario = async (cliente: Cliente,confirmPassword : string) => {
   try {
     cliente.dataNacs = "2023-06-18";
-    console.log(celulares);
     const clientUser = {
       "email" : cliente.e_Mail,
       "password" : cliente.password,
       "confirmPassword": confirmPassword
     }
-    await axios.post('http://192.168.1.2:5141/api/Values/CreateUser', clientUser);
+    await axios.post('http://192.168.1.7:5141/api/Values/CreateUser', clientUser);
 
     // if(result == null)
     //   return;
-    await axios.post('http://192.168.1.2:5141/api/Cliente', cliente);
+    await axios.post('http://192.168.1.7:5141/api/Cliente', cliente);
     // const clienteID : any =
     // if(clienteID != 0){
     //   celulares.forEach(async celular => {
     //     celular.clienteID = clienteID;
-    //     await axios.post('http://192.168.1.2:5141/api/Celular', celular);
+    //     await axios.post('http://192.168.1.7:5141/api/Celular', celular);
     //   });
     // }
     return;
@@ -97,7 +97,7 @@ export const postUsuario = async (cliente: Cliente,confirmPassword : string,celu
 export const cadastrarFazenda = async (fazenda : fazendaCadastro) => {
   TokenAutorizado = await AsyncStorage.getItem('authToken');
     try {
-    const response = await axios.post('http://192.168.1.2:5141/api/Fazenda', fazenda, {
+    const response = await axios.post('http://192.168.1.7:5141/api/Fazenda', fazenda, {
       headers: {
         Authorization: `Bearer ${TokenAutorizado}`,
         Accept: 'application/json'
@@ -120,7 +120,7 @@ export const cadastrarFazenda = async (fazenda : fazendaCadastro) => {
 
 export const loginUser = async (cliente: LoginUser) => {
   try {
-    const response = await axios.post('http://192.168.1.2:5141/api/Values/LoginUser', cliente);
+    const response = await axios.post('http://192.168.1.7:5141/api/Values/LoginUser', cliente);
     if (response.data && response.data.token) {
       const authToken = response.data.token;
       await AsyncStorage.setItem('authToken', authToken);
@@ -151,6 +151,37 @@ export const getUserId = async () => {
     return null;
   }
 };
+
+export const getUserCpf = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/Values/cpf`, {
+      headers: {
+        Authorization: `Bearer ${TokenAutorizado}`,
+      },
+    });
+    const userCpf = response.data;
+    return userCpf;
+  } catch (error) {
+    console.error('Erro ao obter o ID do usuário:', error);
+    return null;
+  }
+};
+
+export const PupularDropdownPlantacao = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/Fazenda/plantacoes`, {
+      headers: {
+        Authorization: `Bearer ${TokenAutorizado}`,
+      },
+    });
+    const plantacoes = response.data;
+    return plantacoes;
+  } catch (error) {
+    console.error('Erro ao obter o ID do usuário:', error);
+    return null;
+  }
+};
+
 
 
 export async function getCoordinates(address: string): Promise<{ latitude: string; longitude: string }> {

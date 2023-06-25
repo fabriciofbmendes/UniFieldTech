@@ -7,8 +7,9 @@ import Cadastro from '../../screens/LoginSingUp/Cadastro'
 import { propsNavigationStack } from "./Models";
 import Fazenda from "../../screens/Fazenda";
 import ClimaRegiao from "../../screens/ClimaRegiao";
-
 import CadastroFazenda from "../../screens/Fazenda/Cadastro";
+import CalendarioClima from "../../screens/CalendarioClima";
+
 const {Navigator,Screen} = createNativeStackNavigator<propsNavigationStack>()
 
 export default function() {
@@ -19,6 +20,8 @@ export default function() {
             <Screen name="Cadastro" component={Cadastro}/>
             <Screen name="Fazenda" component={Fazenda}/>
             <Screen name="CadastroFazenda" component={CadastroFazenda}/>
+            <Screen name="ClimaRegiao" component={ClimaRegiao}/>
+            <Screen name="CalendarioClima" component={CalendarioClima}/>
         </Navigator>
     )
 }
