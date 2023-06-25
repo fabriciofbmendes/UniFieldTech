@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import axios from 'axios';
 import stilo from '../../styles';
-import { getClima, getFazendasDoUsuario, getUserCpf } from '../../api';
+import { getClima, getFazendasDoUsuario, getUserCpf, getTemp } from '../../api';
 import { useNavigation } from '@react-navigation/native';
 import { propsStack } from '../../routes/Stack/Models';
 import { HumidadeAcimaDoSolo } from '../../interfaces/climApiVariables';
@@ -32,20 +32,25 @@ const Home = () => {
 
   const handleFazendaClick = async (fazenda: Fazenda) => {
     // Navegar para a tela do mapa e passar os valores da fazenda
-    const clima = JSON.stringify(await getClima(HumidadeAcimaDoSolo,currentDate,fazenda.longitude,fazenda.latitude));
+    //const clima = JSON.stringify(await getClima(HumidadeAcimaDoSolo,currentDate,fazenda.longitude,fazenda.latitude));
+    const clima = await getTemp(fazenda.longitude,fazenda.latitude);
+    console.log(clima);
     navigation.navigate("Fazenda", {
       latitude: fazenda.latitude,
       longitude: fazenda.longitude,
       hectar: fazenda.hectar,
     });
   };
-  const handleInformacoes = () => {
-    navigation.navigate('CalendarioClima');
-  }
+
 
   const handleCadastrarFazenda = () => {
     // Navegar para a tela de cadastro de fazenda
     navigation.navigate('CadastroFazenda');
+  };
+
+  const handleInformacoes = () => {
+    // Navegar para a tela de cadastro de fazenda
+    navigation.navigate('CalendarioClima');
   };
 
 
