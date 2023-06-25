@@ -39,7 +39,9 @@ const Home = () => {
       hectar: fazenda.hectar,
     });
   };
-
+  const handleInformacoes = () => {
+    navigation.navigate('CalendarioClima');
+  }
 
   const handleCadastrarFazenda = () => {
     // Navegar para a tela de cadastro de fazenda
@@ -72,7 +74,7 @@ const Home = () => {
                 <View style={styles.buttons}>
                   <TouchableOpacity
                     style={[styles.buttoninfo]}
-                    onPress={() => handleFazendaClick(handleinformacoes)}
+                    onPress={() => handleInformacoes()}
                   >
                     <Text>Saiba Mais</Text>
                   </TouchableOpacity>
