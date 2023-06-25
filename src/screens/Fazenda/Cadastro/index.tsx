@@ -140,7 +140,7 @@ const CadastroFazenda = () => {
         setValue={setCultivar}
         style={[pickerStyle,styles.listbox]}
         dropDownContainerStyle={{ width: "75%",position:'absolute', maxHeight: 200, marginTop: 0 }}
-        setItems={setplantios}
+        setItems={setPlantios}
         zIndex={9000}
         dropDownDirection="TOP"
         zIndexInverse={1000}

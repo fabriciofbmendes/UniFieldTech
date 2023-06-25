@@ -50,20 +50,20 @@ const Home = () => {
   return (
     <ScrollView>
       <View style={styles.home}>
-        <Text style={{fontSize:20,top:20}}>
-          Minhas Fazendas
-        </Text>
-        {fazendas && fazendas.length > 0 ? (
-        {fazendas.map((fazenda:Fazenda) => (
-          <View style={styles.card}>
-          <ImageBackground imageStyle={{borderTopLeftRadius:20,borderTopRightRadius:20}} source={require('../img/fundo-login.jpg')} style={styles.fundocard}></ImageBackground>
-          <Text style={{top:10,fontSize:20}}>{fazenda.nomeFazenda}</Text>
-          <View style={{flexDirection:'row',gap:30,top:10}}>
-            <View style={{flexDirection:'column',top:20}}>
+        <Text style={{ fontSize: 20, top: 20 }}>Minhas Fazendas</Text>
+        {fazendas.map((fazenda: Fazenda) => (
+          <View key={fazenda.fazendaID} style={styles.card}>
+            <ImageBackground
+              imageStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
+              source={require('../img/fundo-login.jpg')}
+              style={styles.fundocard}
+            ></ImageBackground>
+            <Text style={{ top: 10, fontSize: 20 }}>{fazenda.nomeFazenda}</Text>
+            <View style={{ flexDirection: 'row', gap: 30, top: 10 }}>
+              <View style={{ flexDirection: 'column', top: 20 }}>
                 <View style={styles.buttons}>
                   <TouchableOpacity
-                  style={[styles.buttoninfo]}
-                    key={fazenda.fazendaID}
+                    style={[styles.buttoninfo]}
                     onPress={() => handleFazendaClick(fazenda)}
                   >
                     <Text>Ver Região</Text>
@@ -71,37 +71,26 @@ const Home = () => {
                 </View>
                 <View style={styles.buttons}>
                   <TouchableOpacity
-                  style={[styles.buttoninfo]}
-                    key={fazenda.fazendaID}
+                    style={[styles.buttoninfo]}
                     onPress={() => handleFazendaClick(handleinformacoes)}
                   >
                     <Text>Saiba Mais</Text>
                   </TouchableOpacity>
                 </View>
-                
               </View>
-                <View style={{flexDirection:'column',width:'75%',gap:10,flexWrap:'wrap',paddingLeft:70}}>
-                  <Text >Temperatura:80</Text>
-                  <Text>Humidade:80</Text>
-                  <Text>Temperatura:80</Text>
-                  <Text>Humidade:80</Text>
-                </View>
+              <View style={{ flexDirection: 'column', width: '75%', gap: 10, flexWrap: 'wrap', paddingLeft: 70 }}>
+                <Text>Temperatura: 80</Text>
+                <Text>Humidade: 80</Text>
+                <Text>Temperatura: 80</Text>
+                <Text>Humidade: 80</Text>
               </View>
-              
-        </View>
-        
+            </View>
+          </View>
         ))}
-        <TouchableOpacity style={[styles.button,styles.buttoncria]} 
-              onPress={handleCadastrarFazenda}>
-                        <Text>Adcicionar Fazenda</Text>
-
-              </TouchableOpacity>
-      ) : (
-        <Text>Não há fazendas disponíveis.</Text>
-      )}
+        <TouchableOpacity style={[styles.button, styles.buttoncria]} onPress={handleCadastrarFazenda}>
+          <Text>Adcicionar Fazenda</Text>
+        </TouchableOpacity>
       </View>
-
-              
     </ScrollView>
   );
 
