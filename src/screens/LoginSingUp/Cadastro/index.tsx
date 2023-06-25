@@ -7,18 +7,20 @@ import { TextInputMask } from 'react-native-masked-text';
 import { postUsuario } from '../../../api';
 import { celular } from '../../../models/celular';
 import { Ionicons } from '@expo/vector-icons'
-
+import { propsStack } from '../../../routes/Stack/Models';
+import { useNavigation } from '@react-navigation/native';
 const Cadastro = () => {
   const [nomeCliente, setNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [password, setpassword] = useState('');
   const [confirmarpassword, setConfirmarpassword] = useState('');
-  const [celulares, setCelulares] = useState<celular[]>([{ celularID: 0, celularN: '', clienteID: 0 }]); // array to store phone numbers
+  const [CelularN, setCelular] = useState('');
   const [e_Mail, sete_Mail] = useState('');
   const [dataNacs, setdataNacs] = useState('');
   const cpfref = useRef(null);
   const [hidepass, sethidepass] = useState(true);
   const [hidepassconfirma, sethidepassconfirma] = useState(true);
+  const navigation = useNavigation<propsStack>();
   const handleCadastro = async () => {
     const codigo = "";
     const clienteID = 0;
@@ -27,40 +29,20 @@ const Cadastro = () => {
         clienteID,
         nomeCliente,
         cpf,
+        CelularN,
         e_Mail,
         dataNacs,
         password,
         codigo
       };
 
-      const novoUsuario = await postUsuario(cliente,confirmarpassword,celulares);
+      const novoUsuario = await postUsuario(cliente,confirmarpassword);
       console.log('Sucesso! Usuário cadastrado:', novoUsuario);
+      navigation.navigate('Login');
     } catch (error) {
       console.error('Erro ao cadastrar:', error);
     }
   };
-
-  const handleAddCelular = () => {
-    setCelulares([...celulares]); // add an empty phone number field
-  };
-
-  const handleCelularChange = (value : any, index: any) => {
-    const updatedCelulares = [...celulares];
-    updatedCelulares[index] = value;
-    setCelulares(updatedCelulares);
-  };
-
-  const handleRemoveCelular = (index: any) => {
-    if (celulares.length === 1) {
-      return; // Don't allow removing the last celular field
-    }
-
-    const updatedCelulares = [...celulares];
-    updatedCelulares.splice(index, 1);
-    setCelulares(updatedCelulares);
-  };
-
-  
 
   return (
     <ScrollView>
@@ -113,25 +95,12 @@ const Cadastro = () => {
           </TouchableOpacity>
         </View>
 
-        {celulares.map((celular, index) => (
-          <View key={index}>
-            <TextInputMask
-              style={[styles.input,styles.inputform,styles.celular]}
-              type={'cel-phone'}
-              options={{maskType:'BRL',withDDD:true,dddMask:'(999) '}}
-              placeholder="Celular"
-              value={celular.celularN}
-              onChangeText={(value) => handleCelularChange(value, index)}
-            />
-            {index !== 0 && (
-              <Button
-                title="Remover Celular"
-                onPress={() => handleRemoveCelular(index)}
-              />
-            )}
-          </View>
-        ))}
-        {/* Button to add new celular number input field */}
+        <TextInput
+        placeholder="Numero do Celular"
+        value={CelularN}
+        onChangeText={setCelular}
+      style={[styles.input,styles.inputform,{top:10}]}
+      />
         
         <TextInput
           placeholder="e_Mail"

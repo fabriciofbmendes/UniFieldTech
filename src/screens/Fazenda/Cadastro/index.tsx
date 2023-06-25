@@ -4,8 +4,8 @@ import axios from 'axios';
 import styles from '../../../styles';
 import { useNavigation } from '@react-navigation/native';
 import { propsStack } from '../../../routes/Stack/Models';
-import { cadastrarFazenda, getCoordinates, getUserId } from '../../../api';
-import DropDownPicker, { ValueType } from 'react-native-dropdown-picker';
+import { cadastrarFazenda, getCoordinates, getUserId,PupularDropdownPlantacao } from '../../../api';
+import DropDownPicker, { ItemType, ValueType } from 'react-native-dropdown-picker';
 
 interface Estado {
     label: string;
@@ -13,14 +13,20 @@ interface Estado {
   }
   
   interface Plantio{
-  label: string;
-  value: string;
+  nomePlantio: string;
+  id: number;
 }
+
+  interface IdUsuario{
+    clienteID : number;
+    clienteIdUser: string;
+  }
 
 const CadastroFazenda = () => {
   const [nomeFazenda, setNomeFazenda] = useState('');
   const [hectar, setHectar] = useState('');
-  const [cultivar, setCultivar] = useState('');
+  const [PlantacaoId, setCultivar] = useState<number>(0);
+  const [plantios, setPlantios] = useState<Plantio[]>([]);
   const [rua, setRua] = useState('');
   const [num, setNumero] = useState('');
   const [cidade, setCidade] = useState('');
@@ -34,19 +40,36 @@ const CadastroFazenda = () => {
     { label: 'Minas Gerais', value: 'MG' },
     { label: 'São Paulo', value: 'SP' },
   ]);
-const [plantios, setplantios] = useState<Plantio[]>([
-    { label: 'Cafe', value: 'Cafe' },
-    { label: 'Soja', value: 'Soja' },
-  ]);
   
+  useEffect(() => {
+    const fetchPlantios = async () => {
+      try {
+        const response = await PupularDropdownPlantacao();
+        setPlantios(response);
+      } catch (error) {
+        console.error('Erro ao obter plantios:', error);
+      }
+    };
+
+    fetchPlantios();
+  }, []);
+
+  const plantioItems: ItemType<number>[] = plantios.map((plantio) => ({
+    label: plantio.nomePlantio,
+    value: plantio.id,
+  }));
+
   const navigation = useNavigation<propsStack>();
   
   const handleCadastroFazenda = async () => {
+
+    const ids : IdUsuario= await getUserId();
+
     const fazenda = {
         fazendaID: 0,
         nomeFazenda,
         hectar,
-        cultivar,
+        PlantacaoId,
         rua,
         num,
         cidade,
@@ -55,7 +78,8 @@ const [plantios, setplantios] = useState<Plantio[]>([
         longitude: '',
         tipoPlantio: true,
         areaMecanizada: true,
-        clienteID: await getUserId(),
+        clienteIdUser: ids.clienteIdUser,
+        clienteID: ids.clienteID
     };
     try {
         const coordinates = await getCoordinates(`${rua}, ${num}, ${cidade}, ${estado}`);
@@ -110,8 +134,8 @@ const [plantios, setplantios] = useState<Plantio[]>([
         <View>
         <DropDownPicker
         open={open}
-        value={cultivar}
-        items={plantios}
+        value={PlantacaoId}
+        items={plantioItems}
         setOpen={setOpen}
         setValue={setCultivar}
         style={[pickerStyle,styles.listbox]}

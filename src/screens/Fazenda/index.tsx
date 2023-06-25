@@ -11,11 +11,9 @@ const ClimaRegiao = () => {
 
   const route = useRoute();
   let { latitude, longitude, hectar } = route.params as FazendaMapa;
-
   latitude = parseFloat(latitude.toString());
   longitude = parseFloat(longitude.toString());
   hectar = Math.sqrt(hectar * 10000);
-
   useEffect(() => {
     const obterTemperaturaFazenda = async () => {
       try {
@@ -59,7 +57,7 @@ const ClimaRegiao = () => {
       >
         <Circle
           center={{ latitude: latitude, longitude: longitude }}
-          radius={100}
+          radius={hectar}
           fillColor="rgba(0, 128, 255, 0.2)"
           strokeColor="rgba(0, 128, 255, 0.8)"
           strokeWidth={2}
