@@ -5,12 +5,13 @@ import styles from '../../../styles';
 import { useNavigation } from '@react-navigation/native';
 import { propsStack } from '../../../routes/Stack/Models';
 import { loginUser } from '../../../api';
+import { Ionicons } from '@expo/vector-icons'
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation<propsStack>();
-
+  const [hidepass, sethidepass]=useState(true);
   const handleLogin = async () => {
     const cliente = {
       email,
@@ -28,22 +29,32 @@ const LoginScreen = () => {
   };
 
   return (
+    
     <View style={styles.container}>
       <ImageBackground source={require('../../img/fundo-login.jpg')} style={styles.fundo}>
-        <Text style={styles.title}>AgrofieldTech</Text>
+        <Text style={{bottom:80,fontSize:35,alignSelf:'center'}}>AgrofieldTech</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input]}
           placeholder="Email"
           onChangeText={text => setEmail(text)}
           value={email}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Senha"
-          secureTextEntry
-          onChangeText={text => setPassword(text)}
-          value={password}
-        />
+        <View style={styles.senhadiv}>
+          <TextInput 
+            style={styles.inputsenha}
+            placeholder="Senha"
+            secureTextEntry={hidepass}
+            onChangeText={text => setPassword(text)}
+            value={password}
+          />
+          <TouchableOpacity style={{width:"15%"}} onPress={()=> sethidepass(!hidepass)}>
+            { hidepass ?
+              <Ionicons name="eye" color="#000" size={25}></Ionicons>
+              :
+              <Ionicons name="eye-off" color="#000" size={25}></Ionicons>
+            }
+          </TouchableOpacity>
+        </View>
         <View style={styles.buttondiv}>
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text>Login</Text>

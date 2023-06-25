@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import axios from 'axios';
 import stilo from '../../styles';
 import { getClima, getFazendasDoUsuario, getUserCpf } from '../../api';
@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { propsStack } from '../../routes/Stack/Models';
 import { HumidadeAcimaDoSolo } from '../../interfaces/climApiVariables';
 import moment from 'moment';
+import styles from '../../styles';
 
 
 const Home = () => {
@@ -45,24 +46,63 @@ const Home = () => {
     navigation.navigate('CadastroFazenda');
   };
 
+
   return (
-    <View>
-      <TouchableOpacity onPress={handleCadastrarFazenda}>
-        <Text>Cadastrar Fazenda</Text>
-      </TouchableOpacity>
-      {fazendas && fazendas.length > 0 ? (
-        fazendas.map((fazenda) => (
-          <TouchableOpacity
-            key={fazenda.fazendaID}
-            onPress={() => handleFazendaClick(fazenda)}
-          >
-            <Text>{fazenda.nomeFazenda}</Text>
-          </TouchableOpacity>
-        ))
+    <ScrollView>
+      <View style={styles.home}>
+        <Text style={{fontSize:20,top:20}}>
+          Minhas Fazendas
+        </Text>
+        {fazendas && fazendas.length > 0 ? (
+        {fazendas.map((fazenda:Fazenda) => (
+          <View style={styles.card}>
+          <ImageBackground imageStyle={{borderTopLeftRadius:20,borderTopRightRadius:20}} source={require('../img/fundo-login.jpg')} style={styles.fundocard}></ImageBackground>
+          <Text style={{top:10,fontSize:20}}>{fazenda.nomeFazenda}</Text>
+          <View style={{flexDirection:'row',gap:30,top:10}}>
+            <View style={{flexDirection:'column',top:20}}>
+                <View style={styles.buttons}>
+                  <TouchableOpacity
+                  style={[styles.buttoninfo]}
+                    key={fazenda.fazendaID}
+                    onPress={() => handleFazendaClick(fazenda)}
+                  >
+                    <Text>Ver Região</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.buttons}>
+                  <TouchableOpacity
+                  style={[styles.buttoninfo]}
+                    key={fazenda.fazendaID}
+                    onPress={() => handleFazendaClick(handleinformacoes)}
+                  >
+                    <Text>Saiba Mais</Text>
+                  </TouchableOpacity>
+                </View>
+                
+              </View>
+                <View style={{flexDirection:'column',width:'75%',gap:10,flexWrap:'wrap',paddingLeft:70}}>
+                  <Text >Temperatura:80</Text>
+                  <Text>Humidade:80</Text>
+                  <Text>Temperatura:80</Text>
+                  <Text>Humidade:80</Text>
+                </View>
+              </View>
+              
+        </View>
+        
+        ))}
+        <TouchableOpacity style={[styles.button,styles.buttoncria]} 
+              onPress={handleCadastrarFazenda}>
+                        <Text>Adcicionar Fazenda</Text>
+
+              </TouchableOpacity>
       ) : (
         <Text>Não há fazendas disponíveis.</Text>
       )}
-    </View>
+      </View>
+
+              
+    </ScrollView>
   );
 
 

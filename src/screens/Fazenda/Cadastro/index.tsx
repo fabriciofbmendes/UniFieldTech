@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import axios from 'axios';
 import styles from '../../../styles';
 import { useNavigation } from '@react-navigation/native';
@@ -32,11 +32,13 @@ const CadastroFazenda = () => {
   const [cidade, setCidade] = useState('');
   const [estado, setEstado] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const [estadosBrasileiros, setEstadosBrasileiros] = useState<Estado[]>([
     { label: 'Acre', value: 'AC' },
     { label: 'Alagoas', value: 'AL' },
     { label: 'Amapá', value: 'AP' },
     { label: 'Minas Gerais', value: 'MG' },
+    { label: 'São Paulo', value: 'SP' },
   ]);
   
   useEffect(() => {
@@ -96,63 +98,80 @@ const CadastroFazenda = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Cadastro de Fazenda</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Nome da Fazenda"
-        onChangeText={text => setNomeFazenda(text)}
-        value={nomeFazenda}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Hectares"
-        onChangeText={text => setHectar(text)}
-        value={hectar}
-      />
-    <DropDownPicker
-      open={open}
-      value={PlantacaoId}
-      items={plantioItems}
-      setOpen={setOpen}
-      setValue={setCultivar}
-      style={pickerStyle}
-      setItems={setPlantios}
-    />
-      <TextInput
-        style={styles.input}
-        placeholder="Rua"
-        onChangeText={text => setRua(text)}
-        value={rua}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Número"
-        onChangeText={text => setNumero(text)}
-        value={num}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Cidade"
-        onChangeText={text => setCidade(text)}
-        value={cidade}
-      />
-       <DropDownPicker
+      <View style={styles.container}>
+        <Text style={styles.title}>Cadastro de Fazenda</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Nome da Fazenda"
+          onChangeText={text => setNomeFazenda(text)}
+          value={nomeFazenda}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Hectares"
+          onChangeText={text => setHectar(text)}
+          value={hectar}
+        />
+        
+        <TextInput
+          style={styles.input}
+          placeholder="Rua"
+          onChangeText={text => setRua(text)}
+          value={rua}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Número"
+          onChangeText={text => setNumero(text)}
+          value={num}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Cidade"
+          onChangeText={text => setCidade(text)}
+          value={cidade}
+        />
+        <View>
+        <DropDownPicker
         open={open}
-        value={estado}
-        items={estadosBrasileiros}
+        value={PlantacaoId}
+        items={plantioItems}
         setOpen={setOpen}
-        setValue={setEstado}
-        style={pickerStyle}
-        setItems={setEstadosBrasileiros}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleCadastroFazenda}>
-        <Text>Cadastrar Fazenda</Text>
-      </TouchableOpacity>
-    </View>
+        setValue={setCultivar}
+        style={[pickerStyle,styles.listbox]}
+        dropDownContainerStyle={{ width: "75%",position:'absolute', maxHeight: 200, marginTop: 0 }}
+        setItems={setplantios}
+        zIndex={9000}
+        dropDownDirection="TOP"
+        zIndexInverse={1000}
+        
+        />
+      </View>
+      <View>
+        <DropDownPicker
+          open={open2}
+          value={estado}
+          items={estadosBrasileiros}
+          setOpen={setOpen2}
+          setValue={setEstado}
+          style={[picker2Style,styles.listbox]}
+          dropDownContainerStyle={{ width: "75%",position:'absolute', maxHeight: 500,marginBottom:20 }}
+          zIndex={3000}
+          zIndexInverse={1000}
+          setItems={setEstadosBrasileiros}
+          
+        />
+      </View>
+        <TouchableOpacity style={styles.button} onPress={handleCadastroFazenda}>
+          <Text>Cadastrar Fazenda</Text>
+        </TouchableOpacity>
+      </View>
   );
 };
 const pickerStyle = {
-    height: 40, // Defina a altura desejada
+    height: 0, // Defina a altura desejada
   };
+const picker2Style ={
+  height:20,
+}
 export default CadastroFazenda;
