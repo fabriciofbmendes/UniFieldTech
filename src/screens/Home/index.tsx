@@ -48,9 +48,12 @@ const Home = () => {
     navigation.navigate('CadastroFazenda');
   };
 
-  const handleInformacoes = () => {
-    // Navegar para a tela de cadastro de fazenda
-    navigation.navigate('CalendarioClima');
+  const handleInformacoes = async (fazenda: Fazenda) => {
+    navigation.navigate('CalendarioClima', {
+      latitude: fazenda.latitude,
+      longitude: fazenda.longitude,
+      plantacaoId: fazenda.plantacaoId,
+    });
   };
 
 
@@ -79,7 +82,7 @@ const Home = () => {
                 <View style={styles.buttons}>
                   <TouchableOpacity
                     style={[styles.buttoninfo]}
-                    onPress={() => handleInformacoes()}
+                    onPress={() => handleInformacoes(fazenda)}
                   >
                     <Text>Saiba Mais</Text>
                   </TouchableOpacity>

@@ -18,6 +18,8 @@
     "axios": "^1.4.0",
     "crypto": "^1.0.0",
     "crypto-js": "^4.1.1",
+    "date-fns": "^2.30.0",
+    "date-fns-tz": "^2.0.0",
     "expo": "~48.0.15",
     "expo-location": "~15.1.1",
     "expo-splash-screen": "~0.18.2",
