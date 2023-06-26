@@ -1,72 +1,58 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { View,Text, Button, TouchableOpacity } from "react-native";
 import {getTemp} from "../../api";
+import { useRoute } from "@react-navigation/native";
+import { format } from 'date-fns';
+import { ptBR,enUS, enGB } from 'date-fns/locale';
+import { utcToZonedTime } from 'date-fns-tz';
+import { VerificaClima } from "./validacoes";
+import { ClimaInterface } from "../../interfaces/Clima";
 
 const CalendarioClima = () => {
-    const [Clima, setClima] = useState<{
-        current_weather?: {
-          temperature?: string;
-          windspeed?: string;
-          // Outras propriedades relacionadas ao clima atual
-        };
-        daily?: {
-          time?: string[];
-          temperature_2m_max?: string[];
-          temperature_2m_min?: string[];
-          precipitation_probability_max?: string[];
-          sunrise?: string[];
-          sunset?: string[];
-          uv_index_clear_sky?: string[];
-          uv_index_max?: string[];
-          precipitation_sum?: string[];
-          rain_sum?: string[];
-          precipitation_hours?: string[];
-          windspeed_10m_max?: string[];
-          windgusts_10m_max?: string[];
-          winddirection_10m_dominant?: string[];
-          // Outras propriedades relacionadas ao clima diário
-        };
+  const formato = 'dd';
+  const route = useRoute();
+  let { latitude, longitude, plantacaoId } = route.params as Calendario;
+  latitude = parseFloat(latitude.toString());
+  longitude = parseFloat(longitude.toString());
+  plantacaoId = parseFloat(plantacaoId.toString());
+  const [perigo,setPerigo] =  useState<perigo>(); 
 
-        hours?: {
-            time?: string[];
-            relativehumidity_2m?: string[];
-            precipitation_probability?: string[];
-            precipitation?: string[];
-            rain?: string[];
-            cloudcover?: string[];
-            windspeed_10m?: string[];
-            winddirection_10m?: string[];
-            temperature_80m?: string[];
-            uv_index?: string[];
-            uv_index_clear_sky?: string[];
-            temperature_925hPa?: string[];
-            relativehumidity_925hPa?: string[];
-            cloudcover_925hPa?: string[];
-            windspeed_925hPa?: string[];
-            winddirection_925hPa?: string[];
-        }
-      }>({}); 
-      
+    const [Clima, setClima] = useState<ClimaInterface>({}); 
       useEffect(() => {
         const obterTemperaturaFazenda = async () => {
-            const longitude = -47.9292;
-            const latitude = -15.7795;
             try {
             const response = await getTemp(longitude,latitude);
-            //console.log(response);
-            setClima(response);
-            console.log(Clima);
+            await setClima(response);
             } catch (error) {
             console.log(error);
             }
         };
         obterTemperaturaFazenda();
         }, []);
-    
+        
+    const handleTeste = async ()=>{
+      const response = await VerificaClima(plantacaoId,Clima);
+      setPerigo(response);
+    }
+
     return (
         <View>
-            
-        </View>
+        {Clima.daily && Clima.daily.time && Clima.daily.time.map((time, index) => (
+          <Text key={index}>
+            {format(utcToZonedTime(time, 'America/Sao_Paulo'), formato, { locale: ptBR })}
+            <Text>Chuva</Text>
+            <Text>{perigo?.PerigoChuva[index]}</Text>
+            <Text>Temperatura</Text>
+            <Text>{perigo?.PerigoTemperatura[index]}</Text>
+            <Text>Vento</Text>
+            <Text>{perigo?.PerigoVento[index]}</Text>
+          </Text>
+        ))}
+
+        <TouchableOpacity onPress={handleTeste}>
+          <Text>Me Clique</Text>
+        </TouchableOpacity>
+      </View>
     )
 }
 

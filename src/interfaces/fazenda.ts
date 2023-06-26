@@ -5,4 +5,5 @@ interface Fazenda {
     longitude: number;
     hectar: number;
     clienteID: string;
+    plantacaoId : number;
   }
