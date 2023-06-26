@@ -12,7 +12,7 @@ import styles from "../../styles";
 const CalendarioClima = () => {
   const formato = 'EEE';
   const route = useRoute();
-  let { latitude, longitude, plantacaoId } = route.params as Calendario;
+  let { latitude, longitude, plantacaoId,nomeFazenda } = route.params as Calendario;
   latitude = parseFloat(latitude.toString());
   longitude = parseFloat(longitude.toString());
   plantacaoId = parseFloat(plantacaoId.toString());
@@ -25,6 +25,8 @@ const CalendarioClima = () => {
             try {
             const response = await getTemp(longitude,latitude);
             await setClima(response);
+            const perigoResponse = await VerificaClima(plantacaoId, response);
+            setPerigo(perigoResponse);
             } catch (error) {
             console.log(error);
             }
@@ -36,7 +38,6 @@ const CalendarioClima = () => {
       const response = await VerificaClima(plantacaoId,Clima);
       setPerigo(response);
     }
-    
         
       const getTextColorVento = (index : number) => {
         const valorVento = perigo?.PerigoVento[index];
@@ -73,7 +74,7 @@ const CalendarioClima = () => {
     return (
       <>
       
-            <Text style={{fontSize:24,textAlign:'center',top:'2%'}}>Nome da Fazenda</Text>
+            <Text style={{fontSize:24,textAlign:'center',top:'2%'}}>{nomeFazenda}</Text>
           <View style={styles.calendario}>
             
           {Clima.daily && Clima.daily.time && Clima.daily.time.map((time, index) => (
@@ -85,26 +86,31 @@ const CalendarioClima = () => {
                   <Text style={{fontSize:15,textTransform:'uppercase',fontWeight:'bold'}}>{format(utcToZonedTime(time, 'America/Sao_Paulo'), formato, { locale: ptBR })}</Text>
                   <View style={styles.doubleitem}>
                     <Text >Chuva: </Text>
-                    <Text style={{color: getTextColorChuva(index)}}>{perigo?.PerigoChuva[index]}</Text>
+                    <Text style={{color: getTextColorChuva(index)}}>{Clima.daily?.precipitation_sum?.[index]}mm</Text>
                   </View>
                  
                   <View style={styles.doubleitem}>
                     <Text>Vento: </Text>
-                    <Text style={{color: getTextColorVento(index)}}>{perigo?.PerigoVento[index]}</Text>
+                    <Text style={{color: getTextColorVento(index)}}>{Clima.daily?.windspeed_10m_max?.[index]}Km/h</Text>
                   </View>
                   <View style={styles.doubleitem}>
-                    <Text>Temperatura: </Text>
-                    <Text style={{color: getTextColortemperatura(index)}}>{perigo?.PerigoTemperatura[index]}</Text>
+                    <Text>Temperatura Max:</Text>
+                    <Text style={{color: getTextColortemperatura(index)}}>{Clima.daily?.temperature_2m_max?.[index]}Cº</Text>
                   </View>
-
+                  <View style={styles.doubleitem}>
+                    <Text>Temperatura Min:</Text>
+                    <Text style={{color: getTextColortemperatura(index)}}>{Clima.daily?.temperature_2m_min?.[index]}Cº</Text>
+                  </View>
                 </View>
               </View>
             </Text>
           ))}
 
-          <TouchableOpacity onPress={handleTeste}>
+          {/* <TouchableOpacity onPress={handleTeste}>
             <Text style={[styles.button,{left:22,top:20,paddingTop:15,justifyContent:'center',width:'200%'}]}>Me Clique</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+
+
         </View>
         
         </>

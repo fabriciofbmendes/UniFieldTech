@@ -14,7 +14,8 @@ export type propsNavigationStack = {
     CalendarioClima: {
         latitude: number,
         longitude: number,
-        plantacaoId: number
+        plantacaoId: number,
+        nomeFazenda : string
     }
 }
 

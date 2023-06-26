@@ -53,6 +53,7 @@ const Home = () => {
       latitude: fazenda.latitude,
       longitude: fazenda.longitude,
       plantacaoId: fazenda.plantacaoId,
+      nomeFazenda: fazenda.nomeFazenda
     });
   };
 

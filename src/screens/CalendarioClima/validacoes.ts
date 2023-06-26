@@ -2,7 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ClimaInterface } from '../../interfaces/Clima';
 let TokenAutorizado: string | null;
-const API_URL = 'http://10.1.12.28:5141';
+const API_URL = 'http://192.168.1.3:5141';
 let PerigoVento: string[] = [];
 let PerigoTemperatura: string[] = [];
 let PerigoChuva: string[] = [];
