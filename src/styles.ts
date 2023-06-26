@@ -158,6 +158,33 @@ import { StyleSheet } from 'react-native';
       gap:3,
       
     },
+    calendario:{
+      display:'flex',
+      flexDirection:'row',
+      flexWrap:'wrap',
+      gap:10,
+      top:'6%',
+      left:'3.5%',
+      paddingVertical:'5%',
+      
+    },
+    itemcalendario:{
+      display:"flex",
+      backgroundColor:'lightgray',
+      opacity:0.7,
+      borderRadius: 8,
+      justifyContent:'center',
+      alignItems:'center',
+      paddingTop:10,
+      width:150,
+      padding:10,
+      
+    },
+    doubleitem:{
+      display:'flex',
+      flexDirection:'row',
+      flexWrap:'nowrap'
+    },
     inputform:{
       width:'100%',
       borderBottomRightRadius:0,

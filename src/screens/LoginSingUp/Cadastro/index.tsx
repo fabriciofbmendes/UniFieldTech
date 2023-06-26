@@ -94,8 +94,9 @@ const Cadastro = () => {
             }
           </TouchableOpacity>
         </View>
-
-        <TextInput
+        <TextInputMask
+        type={'cel-phone'}
+        options={{maskType:'BRL',withDDD:true,dddMask:'(999) '}}
         placeholder="Numero do Celular"
         value={CelularN}
         onChangeText={setCelular}
