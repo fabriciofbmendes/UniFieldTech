@@ -13,7 +13,8 @@ const ClimaRegiao = () => {
   const navigation = useNavigation<propsStack>();
 
   const route = useRoute();
-  let { latitude, longitude, hectar } = route.params as FazendaMapa;
+  let { latitude, longitude, hectar, plantacaoId } = route.params as FazendaMapa;
+  console.log("Tela Mapa:" + plantacaoId);
   latitude = parseFloat(latitude.toString());
   longitude = parseFloat(longitude.toString());
   hectar = Math.sqrt(hectar * 10000);
@@ -47,7 +48,9 @@ const ClimaRegiao = () => {
   }, [latitude, longitude]);
 
   const handleCidades = async () => {
-    navigation.navigate('ClimaRegiao')
+    navigation.navigate('ClimaRegiao',{
+      plantacaoId : plantacaoId
+    })
   };
 
   return (
