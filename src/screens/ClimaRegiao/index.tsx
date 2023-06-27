@@ -14,11 +14,11 @@ interface Plantacao{
 type CityDetail = {
   name: string;
   temperatura: string;
-  dias: string;
+  dias: string[];
   velVento: string;
-  tempMax: string;
-  tempMin: string;
-  precipitation: string;
+  tempMax: string[];
+  tempMin: string[];
+  precipitation: string[];
   lat: string | undefined;
   long: string | undefined;
 };  
@@ -69,12 +69,12 @@ const ClimaRegiao = () => {
 
   const [cityDetais, setCityDetais] = useState<CityDetail>({
     name: "",
-    dias: "",
+    dias: [],
     temperatura: "",
-    velVento: "",
-    tempMax: "",
-    tempMin: "",
-    precipitation: "",
+    velVento: "",	
+    tempMax: [],
+    tempMin: [],
+    precipitation: [""],
     lat: "",
     long: ""
   });
@@ -158,10 +158,10 @@ const ClimaRegiao = () => {
         temperatura: data.current_weather?.temperature || "",
         velVento: data.current_weather?.windspeed || "",
         
-        dias : data.daily?.time?.join(";") || "",
-        tempMax: data.daily?.temperature_2m_max?.join("; ") || "", // Armazena todas as posições em uma string separada por vírgula
-        tempMin: data.daily?.temperature_2m_min?.join("; ") || "", // Armazena todas as posições em uma string separada por vírgula
-        precipitation: data.daily?.precipitation_probability_max?.join("; ") || "", // Armazena todas as posições em uma string separada por vírgula
+        dias : data.daily?.time || [], // Armazena todas as posições em uma string separada por vírgula
+        tempMax: data.daily?.temperature_2m_max || [], // Armazena todas as posições em uma string separada por vírgula
+        tempMin: data.daily?.temperature_2m_min || [], // Armazena todas as posições em uma string separada por vírgula
+        precipitation: data.daily?.precipitation_probability_max || [], // Armazena todas as posições em uma string separada por vírgula
         lat: latitude,
         long: longitude,
       };
