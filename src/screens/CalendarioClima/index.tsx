@@ -74,14 +74,14 @@ const CalendarioClima = () => {
     return (
       <>
         <ScrollView>
-            <Text style={{fontSize:40,textAlign:'center',top:'2%'}}>{nomeFazenda}</Text>
+            <Text style={{fontSize:40,textAlign:'center',top:'2%',fontWeight:'bold'}}>{nomeFazenda}</Text>
           <View style={styles.calendario}>
           
           {Clima.daily && Clima.daily.time && Clima.daily.time.map((time, index) => (
             <Text key={index}>
               
                   <View style={styles.itemcalendario}>
-                  <Text style={{fontSize:15,textTransform:'uppercase',fontWeight:'bold'}}>{format(utcToZonedTime(time, 'America/Sao_Paulo'), formato, { locale: ptBR })}</Text>
+                  <Text style={{fontSize:15,textTransform:'uppercase',fontWeight:'bold',bottom:5,letterSpacing:2}}>{format(utcToZonedTime(time, 'America/Sao_Paulo'), formato, { locale: ptBR })}</Text>
                     <View style={{flexDirection:'row',gap:10}}>
                       <View style={{flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
                         <View style={styles.doubleitem}>

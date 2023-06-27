@@ -61,7 +61,7 @@ const Home = () => {
   return (
     <ScrollView>
       <View style={styles.home}>
-        <Text style={{ fontSize: 20, top: 20 }}>Minhas Fazendas</Text>
+        <Text style={{ fontSize: 20, top: 20, fontWeight:'bold' }}>Minhas Fazendas</Text>
         {fazendas.map((fazenda: Fazenda) => (
           <View key={fazenda.fazendaID} style={styles.card}>
             <ImageBackground
@@ -69,15 +69,14 @@ const Home = () => {
               source={require('../img/fundo-login.jpg')}
               style={styles.fundocard}
             ></ImageBackground>
-            <Text style={{ top: 10, fontSize: 20 }}>{fazenda.nomeFazenda}</Text>
-            <View style={{ flexDirection: 'row', gap: 30, top: 10 }}>
-              <View style={{ flexDirection: 'column', top: 20 }}>
+            <Text style={{bottom:30, fontSize: 20, fontWeight:'bold' }}>{fazenda.nomeFazenda}</Text>
+            <View style={{ flexDirection: 'row', gap: 0, top: 10 }}>
                 <View style={styles.buttons}>
                   <TouchableOpacity
                     style={[styles.buttoninfo]}
                     onPress={() => handleFazendaClick(fazenda)}
                   >
-                    <Text>Ver Região</Text>
+                    <Text style={{fontWeight:'bold'}}>Ver Região</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.buttons}>
@@ -85,21 +84,14 @@ const Home = () => {
                     style={[styles.buttoninfo]}
                     onPress={() => handleInformacoes(fazenda)}
                   >
-                    <Text>Saiba Mais</Text>
+                    <Text style={{fontWeight:'bold'}}>Saiba Mais</Text>
                   </TouchableOpacity>
                 </View>
-              </View>
-              <View style={{ flexDirection: 'column', width: '75%', gap: 10, flexWrap: 'wrap', paddingLeft: 70 }}>
-                <Text>Temperatura: 80</Text>
-                <Text>Humidade: 80</Text>
-                <Text>Temperatura: 80</Text>
-                <Text>Humidade: 80</Text>
-              </View>
             </View>
           </View>
         ))}
         <TouchableOpacity style={[styles.button, styles.buttoncria]} onPress={handleCadastrarFazenda}>
-          <Text>Adcicionar Fazenda</Text>
+          <Text style={{fontWeight:'bold'}}>Adcicionar Fazenda</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

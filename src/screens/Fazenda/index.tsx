@@ -74,7 +74,7 @@ const ClimaRegiao = () => {
         Temperatura da fazenda: {temperaturaFazenda}°C
       </Text>
 
-      <TouchableOpacity onPress={handleCidades} style={[styles.subheading,styles.overlaytemperturacidades,styles.overlayText]}><Text>Cidaes Proxima</Text></TouchableOpacity>
+      <TouchableOpacity onPress={handleCidades} style={[styles.subheading,styles.overlaytemperturacidades,styles.overlayText,{left:'60%',paddingHorizontal:20}]}><Text style={{fontWeight:'bold'}}>Cidades Proxima</Text></TouchableOpacity>
       {temperaturasCidades.map((temperatura, index) => (
         <Text key={index} style={styles.temperature}>
           Cidade {index + 1}: {temperatura}°C

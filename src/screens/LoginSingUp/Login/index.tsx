@@ -32,7 +32,7 @@ const LoginScreen = () => {
     
     <View style={styles.container}>
       <ImageBackground source={require('../../img/fundo-login.jpg')} style={styles.fundo}>
-        <Text style={{bottom:80,fontSize:35,alignSelf:'center'}}>AgrofieldTech</Text>
+        <Text style={{bottom:80,fontSize:35,alignSelf:'center',fontWeight:'bold'}}>AgrofieldTech</Text>
         <TextInput
           style={[styles.input]}
           placeholder="Email"

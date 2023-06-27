@@ -132,10 +132,9 @@ import { StyleSheet } from 'react-native';
     buttons:{
       bottom:20,
       height:50,
-      width:'100%',
-      left:'50%',
-    
-      alignSelf: 'center'
+      width:'50%',
+      alignSelf: 'center',
+      left:5,
     },
     buttoncria:{
       width:"90%",
@@ -143,7 +142,7 @@ import { StyleSheet } from 'react-native';
     },
     buttoninfo: {
       backgroundColor:'#7CFC00',
-      width:'100%',
+      width:'90%',
       textAlign:'center',
       alignItems:'center',
       padding:10,

@@ -47,7 +47,7 @@ const Cadastro = () => {
   return (
     <ScrollView>
       <View style={[styles.cadastro]}>
-        <Text style={[styles.formlabel,styles.titlecadastro]}>Cadastro</Text>
+        <Text style={[styles.formlabel,styles.titlecadastro,{fontWeight:'bold'}]}>Cadastro</Text>
         <TextInput
           style={[styles.input,styles.inputform]}
           placeholder="Nome Completo *"

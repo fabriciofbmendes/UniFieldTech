@@ -99,7 +99,7 @@ const CadastroFazenda = () => {
 
   return (
       <View style={styles.container}>
-        <Text style={styles.title}>Cadastro de Fazenda</Text>
+        <Text style={[styles.title,{fontWeight:'bold'}]}>Cadastro de Fazenda</Text>
         <TextInput
           style={styles.input}
           placeholder="Nome da Fazenda"
@@ -163,7 +163,7 @@ const CadastroFazenda = () => {
         />
       </View>
         <TouchableOpacity style={styles.button} onPress={handleCadastroFazenda}>
-          <Text>Cadastrar Fazenda</Text>
+          <Text style={{fontWeight:'bold'}}>Cadastrar Fazenda</Text>
         </TouchableOpacity>
       </View>
   );
