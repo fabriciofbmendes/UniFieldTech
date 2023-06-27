@@ -73,36 +73,40 @@ const CalendarioClima = () => {
 
     return (
       <>
-      
-            <Text style={{fontSize:24,textAlign:'center',top:'2%'}}>{nomeFazenda}</Text>
+        <ScrollView>
+            <Text style={{fontSize:40,textAlign:'center',top:'2%'}}>{nomeFazenda}</Text>
           <View style={styles.calendario}>
-            
+          
           {Clima.daily && Clima.daily.time && Clima.daily.time.map((time, index) => (
             <Text key={index}>
               
-              <View style={{display:"flex",flexDirection:'row'}}>
-                <View style={styles.itemcalendario}>
-                 
+                  <View style={styles.itemcalendario}>
                   <Text style={{fontSize:15,textTransform:'uppercase',fontWeight:'bold'}}>{format(utcToZonedTime(time, 'America/Sao_Paulo'), formato, { locale: ptBR })}</Text>
-                  <View style={styles.doubleitem}>
-                    <Text >Chuva: </Text>
-                    <Text style={{color: getTextColorChuva(index)}}>{Clima.daily?.precipitation_sum?.[index]}mm</Text>
+                    <View style={{flexDirection:'row',gap:10}}>
+                      <View style={{flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
+                        <View style={styles.doubleitem}>
+                          <Text >Chuva: </Text>
+                          <Text style={{color: getTextColorChuva(index)}}>{Clima.daily?.precipitation_sum?.[index]}mm</Text>
+                        </View>
+                        <View style={styles.doubleitem}>
+                          <Text>Temperatura Max:</Text>
+                          <Text style={{color: getTextColortemperatura(index)}}>{Clima.daily?.temperature_2m_max?.[index]}Cº</Text>
+                        </View>
+                      </View>
+                      <View style={{flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
+                      <View style={styles.doubleitem}>
+                          <Text>Vento: </Text>
+                          <Text style={{color: getTextColorVento(index)}}>{Clima.daily?.windspeed_10m_max?.[index]}Km/h</Text>
+                        </View>
+                        <View style={styles.doubleitem}>
+                          <Text>Temperatura Min:</Text>
+                          <Text style={{color: getTextColortemperatura(index)}}>{Clima.daily?.temperature_2m_min?.[index]}Cº</Text>
+                        </View>
+                      </View>
+                    </View>
                   </View>
-                 
-                  <View style={styles.doubleitem}>
-                    <Text>Vento: </Text>
-                    <Text style={{color: getTextColorVento(index)}}>{Clima.daily?.windspeed_10m_max?.[index]}Km/h</Text>
-                  </View>
-                  <View style={styles.doubleitem}>
-                    <Text>Temperatura Max:</Text>
-                    <Text style={{color: getTextColortemperatura(index)}}>{Clima.daily?.temperature_2m_max?.[index]}Cº</Text>
-                  </View>
-                  <View style={styles.doubleitem}>
-                    <Text>Temperatura Min:</Text>
-                    <Text style={{color: getTextColortemperatura(index)}}>{Clima.daily?.temperature_2m_min?.[index]}Cº</Text>
-                  </View>
-                </View>
-              </View>
+                
+              
             </Text>
           ))}
 
@@ -112,7 +116,7 @@ const CalendarioClima = () => {
 
 
         </View>
-        
+        </ScrollView>
         </>
     )
 }

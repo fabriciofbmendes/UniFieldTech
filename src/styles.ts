@@ -166,7 +166,7 @@ import { StyleSheet } from 'react-native';
       top:'6%',
       left:'3.5%',
       paddingVertical:'5%',
-      
+      marginBottom:"5%",      
     },
     itemcalendario:{
       display:"flex",
@@ -176,7 +176,7 @@ import { StyleSheet } from 'react-native';
       justifyContent:'center',
       alignItems:'center',
       paddingTop:10,
-      width:150,
+      width:310,
       padding:10,
       
     },

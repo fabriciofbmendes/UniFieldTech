@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, FlatList } from 'react-native';
 import axios from 'axios';
+import estilo from '../../styles'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -177,51 +178,39 @@ const ClimaRegiao = () => {
 
   const renderCityItem = ({ item }: { item: CityDetail }) => {
     return (
-      <View style={{ padding: 10 }}>
-        <Text>{item.name}</Text>
-        <Text>Temperatura Atual: {item.temperatura}</Text>
-        <Text>Dias: {item.dias}</Text>
-        <Text>Temperatura Máxima: {item.tempMax}</Text>
-        <Text>Temperatura Mínima: {item.tempMin}</Text>
-        <Text>Precipitação: {item.precipitation}</Text>
-        <Text>Velocidade do Vento: {item.velVento}</Text>
+      <View style={{ padding: 10,width:"100%" }}>
+        <View style={{width:"100%",alignItems:'center',borderWidth:1}}>
+          <Text>{item.name}</Text>
+        </View>
+        <View style={{flexDirection:'row',flexWrap:'wrap',borderWidth:1}}>
+          <Text>Temperatura Atual: {item.temperatura}C°</Text>
+          <Text>Dias: {item.dias}</Text>
+          <Text>Temperatura Máxima: {item.tempMax}</Text>
+          <Text>Temperatura Mínima: {item.tempMin}</Text>
+          <Text>Precipitação: {item.precipitation}</Text>
+          <Text>Velocidade do Vento: {item.velVento}</Text>
+        </View>
       </View>
     );
   };
 
   return ( 
   <View style={{ flex: 1, padding: 20 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <GooglePlacesAutocomplete
-          placeholder="Search"
-          query={{
-            key: `AIzaSyCelaOIk2vZZiqnUm9-M_x5Vt8BQcyf2jE`,
-            language: 'pt', // language of the results
-          }}
-          onPress={(data, details) => handleAddCity(data.description)}
-          onFail={(error) => console.error(error)}
-          requestUrl={{
-            url:
-              'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
-            useOnPlatform: 'web',
-          }}
-        />
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => handleAddCity(city)}
-        >
-          <Text style={styles.buttonText}>Adicionar</Text>
-        </TouchableOpacity>
-      </View>
-
       <Text style={styles.headerText}>Lista de Cidades</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Insira o nome da cidade"
-        onChangeText={text => setCity(text)}
-        value={city}
-      />
+        <View style={{flexDirection:'row',gap:10,alignItems:'center',justifyContent:'center'}}>
+          <TextInput
+            style={[estilo.input,{width:"60%"}]}
+            placeholder="Insira o nome da cidade"
+            onChangeText={text => setCity(text)}
+            value={city}
+          />
+          <TouchableOpacity
+            style={[styles.addButton,{flex:1}]}
+            onPress={() => handleAddCity(city)}
+          >
+            <Text style={styles.buttonText}>Adicionar</Text>
+          </TouchableOpacity>
+      </View>
 
       <FlatList
         data={cityList}
@@ -235,11 +224,12 @@ const ClimaRegiao = () => {
 
 const styles = StyleSheet.create({
   addButton: {
-    marginLeft: 10,
     backgroundColor: 'blue',
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    alignItems:'center',
     borderRadius: 8,
+    bottom:5,
+    marginLeft:10,
   },
   buttonText: {
     color: 'white',
@@ -250,6 +240,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    alignSelf:'center',
   },
   input: {
     height: 40,

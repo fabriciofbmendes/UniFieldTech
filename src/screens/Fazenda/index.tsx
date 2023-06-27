@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import MapView, { Circle } from 'react-native-maps';
 import axios from 'axios';
 import { useRoute } from '@react-navigation/native';
 import { Button } from 'react-bootstrap';
+import { useNavigation } from '@react-navigation/native';
+import { propsStack } from '../../routes/Stack/Models';
 
 const ClimaRegiao = () => {
   const [temperaturaFazenda, setTemperaturaFazenda] = useState(null);
   const [temperaturasCidades, setTemperaturasCidades] = useState([]);
+  const navigation = useNavigation<propsStack>();
 
   const route = useRoute();
   let { latitude, longitude, hectar } = route.params as FazendaMapa;
@@ -43,6 +46,10 @@ const ClimaRegiao = () => {
     obterTemperaturasCidades();
   }, [latitude, longitude]);
 
+  const handleCidades = async () => {
+    navigation.navigate('ClimaRegiao')
+  };
+
   return (
     <View style={styles.container}>
       
@@ -67,7 +74,7 @@ const ClimaRegiao = () => {
         Temperatura da fazenda: {temperaturaFazenda}°C
       </Text>
 
-      <Text style={[styles.subheading,styles.overlaytemperturacidades,styles.overlayText]}>Temperaturas das cidades próximas:</Text>
+      <TouchableOpacity onPress={handleCidades} style={[styles.subheading,styles.overlaytemperturacidades,styles.overlayText]}><Text>Cidaes Proxima</Text></TouchableOpacity>
       {temperaturasCidades.map((temperatura, index) => (
         <Text key={index} style={styles.temperature}>
           Cidade {index + 1}: {temperatura}°C
