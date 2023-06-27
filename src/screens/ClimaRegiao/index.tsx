@@ -197,7 +197,7 @@ const ClimaRegiao = () => {
         </View>
         <View style={{flexDirection:'row',flexWrap:'wrap',borderWidth:1}}>
           <Text>Temperatura Atual: {item.temperatura}C°</Text>
-          <Text>Dias: {item.dias}</Text>
+          <Text>Dias: {data.daily?.time?.length}</Text>
           <Text>Temperatura Máxima: {item.tempMax}</Text>
           <Text>Temperatura Mínima: {item.tempMin}</Text>
           <Text>Precipitação: {item.precipitation}</Text>

@@ -8,6 +8,9 @@ import { utcToZonedTime } from 'date-fns-tz';
 import { VerificaClima } from "./validacoes";
 import { ClimaInterface } from "../../interfaces/Clima";
 import styles from "../../styles";
+import { Ionicons } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'; 
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const CalendarioClima = () => {
   const formato = 'EEE';
@@ -74,32 +77,34 @@ const CalendarioClima = () => {
     return (
       <>
         <ScrollView>
-            <Text style={{fontSize:40,textAlign:'center',top:'2%',fontWeight:'bold'}}>{nomeFazenda}</Text>
+            <Text style={{letterSpacing:3,textTransform:'uppercase',fontSize:40,textAlign:'center',top:'2%',fontWeight:'bold'}}>{nomeFazenda}</Text>
           <View style={styles.calendario}>
           
           {Clima.daily && Clima.daily.time && Clima.daily.time.map((time, index) => (
             <Text key={index}>
               
                   <View style={styles.itemcalendario}>
-                  <Text style={{fontSize:15,textTransform:'uppercase',fontWeight:'bold',bottom:5,letterSpacing:2}}>{format(utcToZonedTime(time, 'America/Sao_Paulo'), formato, { locale: ptBR })}</Text>
+                  <Text style={{fontSize:15,textTransform:'uppercase',fontWeight:'bold',marginBottom:10,letterSpacing:2}}>{format(utcToZonedTime(time, 'America/Sao_Paulo'), formato, { locale: ptBR })}</Text>
                     <View style={{flexDirection:'row',gap:10}}>
-                      <View style={{flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
-                        <View style={styles.doubleitem}>
+                      <View style={{flexDirection:'column',alignItems:'center',gap:5}}>
+                        <View style={[styles.doubleitem]}>
+                          <Ionicons name="rainy-outline" color="#000" size={18} style={styles.iconschuva}></Ionicons>
                           <Text >Chuva: </Text>
                           <Text style={{color: getTextColorChuva(index)}}>{Clima.daily?.precipitation_sum?.[index]}mm</Text>
                         </View>
                         <View style={styles.doubleitem}>
-                          <Text>Temperatura Max:</Text>
-                          <Text style={{color: getTextColortemperatura(index)}}>{Clima.daily?.temperature_2m_max?.[index]}Cº</Text>
-                        </View>
-                      </View>
-                      <View style={{flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
-                      <View style={styles.doubleitem}>
-                          <Text>Vento: </Text>
+                      <Feather name="wind" size={18} color="black"  style={styles.icons} /><Text>Vento: </Text>
                           <Text style={{color: getTextColorVento(index)}}>{Clima.daily?.windspeed_10m_max?.[index]}Km/h</Text>
                         </View>
+                        
+                      </View>
+                      <View style={{flexDirection:'column',alignItems:'center',gap:5}}>
+                      <View style={styles.doubleitem}>
+                        <FontAwesome5 name="temperature-high" size={18} color="black"  style={styles.icons} /><Text>Temp Max:</Text>
+                          <Text style={{color: getTextColortemperatura(index)}}>{Clima.daily?.temperature_2m_max?.[index]}Cº</Text>
+                        </View>
                         <View style={styles.doubleitem}>
-                          <Text>Temperatura Min:</Text>
+                        <FontAwesome5 name="temperature-low" size={18} color="black"  style={styles.icons} /><Text>Temp Min:</Text>
                           <Text style={{color: getTextColortemperatura(index)}}>{Clima.daily?.temperature_2m_min?.[index]}Cº</Text>
                         </View>
                       </View>

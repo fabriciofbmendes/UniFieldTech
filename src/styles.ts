@@ -182,7 +182,15 @@ import { StyleSheet } from 'react-native';
     doubleitem:{
       display:'flex',
       flexDirection:'row',
-      flexWrap:'nowrap'
+      flexWrap:'nowrap',
+      
+    },
+
+    icons:{
+      right:'20%'
+    },
+    iconschuva:{
+      right:'50%'
     },
     inputform:{
       width:'100%',

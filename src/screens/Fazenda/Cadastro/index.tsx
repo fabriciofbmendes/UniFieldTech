@@ -144,6 +144,7 @@ const CadastroFazenda = () => {
         zIndex={9000}
         dropDownDirection="TOP"
         zIndexInverse={1000}
+        placeholder='Selecione a cultura'
         
         />
       </View>
@@ -159,7 +160,7 @@ const CadastroFazenda = () => {
           zIndex={3000}
           zIndexInverse={1000}
           setItems={setEstadosBrasileiros}
-          
+          placeholder='Selecione o estado da fazenda' 
         />
       </View>
         <TouchableOpacity style={styles.button} onPress={handleCadastroFazenda}>
