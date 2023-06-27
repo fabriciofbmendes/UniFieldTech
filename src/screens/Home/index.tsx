@@ -33,12 +33,13 @@ const Home = () => {
   const handleFazendaClick = async (fazenda: Fazenda) => {
     // Navegar para a tela do mapa e passar os valores da fazenda
     //const clima = JSON.stringify(await getClima(HumidadeAcimaDoSolo,currentDate,fazenda.longitude,fazenda.latitude));
-    const clima = await getTemp(fazenda.longitude,fazenda.latitude);
-    console.log(clima);
+    //const clima = await getTemp(fazenda.longitude,fazenda.latitude);
+    //console.log(clima);
     navigation.navigate("Fazenda", {
       latitude: fazenda.latitude,
       longitude: fazenda.longitude,
       hectar: fazenda.hectar,
+      plantacaoId: fazenda.plantacaoId,
     });
   };
 

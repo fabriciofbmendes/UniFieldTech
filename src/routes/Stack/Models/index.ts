@@ -7,9 +7,12 @@ export type propsNavigationStack = {
     Fazenda: {
         latitude: number,
         longitude: number,
-        hectar: number
+        hectar: number,
+        plantacaoId : number
     }
-    ClimaRegiao : undefined,
+    ClimaRegiao : {
+        plantacaoId: number
+    }
     CadastroFazenda : undefined,
     CalendarioClima: {
         latitude: number,

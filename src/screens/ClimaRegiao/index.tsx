@@ -5,6 +5,11 @@ import estilo from '../../styles'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {VerificaClima} from '../CalendarioClima/validacoes'
+import { ClimaInterface } from '../../interfaces/Clima';
+interface Plantacao{
+  plantacaoId :number;
+}
 
 type CityDetail = {
   name: string;
@@ -26,20 +31,25 @@ type tempoDia = {
 
 const ClimaRegiao = () => {
   const route = useRoute();
-  const [data, setData] = useState<{
-    current_weather?: {
-      temperature?: string;
-      windspeed?: string;
-      // Outras propriedades relacionadas ao clima atual
-    };
-    daily?: {
-      time?: string[];
-      temperature_2m_max?: string[];
-      temperature_2m_min?: string[];
-      precipitation_probability_max?: string[];
-      // Outras propriedades relacionadas ao clima diário
-    };
-  }>({});
+  let { plantacaoId } = route.params as Plantacao;
+  const [perigo,setPerigo] =  useState<perigo>(); 
+  // const [data, setData] = useState<{
+  //   current_weather?: {
+  //     temperature?: string;
+  //     windspeed?: string;
+  //     // Outras propriedades relacionadas ao clima atual
+  //   };
+  //   daily?: {
+  //     time?: string[];
+  //     temperature_2m_max?: string[];
+  //     temperature_2m_min?: string[];
+  //     precipitation_probability_max?: string[];
+  //     // Outras propriedades relacionadas ao clima diário
+  //   };
+  // }>({});
+
+  const [data, setData] = useState<ClimaInterface>({});
+
 
   const [tempoDia, setTempoDia] = useState<tempoDia>({
     dia: "",
@@ -118,7 +128,7 @@ const ClimaRegiao = () => {
     try {
       const response = await axios.get(url);
       setData(response.data);
-      console.log(response.data);
+      //console.log(response.data);
     } catch (error) {
       console.error('Error fetching temperature:', error);
     }
@@ -130,7 +140,7 @@ const ClimaRegiao = () => {
       const response = await axios.get(url);
       
       setDataCity(response.data.results[0].locations[0]);
-      console.log(response.data.results[0]);
+      //console.log(response.data.results[0]);
     } catch (error) {
       console.error('Error fetching City:', error);
     }
@@ -156,17 +166,20 @@ const ClimaRegiao = () => {
         long: longitude,
       };
   
-      console.log(newCity);
+      //console.log(newCity);
       setCityList([...cityList, newCity]);
       await AsyncStorage.setItem('cityDetails', JSON.stringify([...cityList, newCity]));
       setCity('');
+
+      const perigoResponse = await VerificaClima(plantacaoId, data);
+      await setPerigo(perigoResponse);
     }
   };
   
   const calcularMedia = (array: number[]) => {
 
     if (!array || array.length === 0) {
-      console.log("No");
+      //console.log("No");
       return 0; // Retorna 0 se o array estiver vazio ou não estiver definido
     }
   
