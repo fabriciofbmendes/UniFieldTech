@@ -84,6 +84,15 @@ import { StyleSheet } from 'react-native';
       justifyContent:'center',
       height:50,
     },
+    calendregion:{
+      backgroundColor:'lightgray',padding:10,alignItems:'center',gap:10,
+      opacity:0.6,borderRadius:8,shadowColor: 'red',
+      shadowOffset: {width: -2, height: 4},
+      shadowOpacity: 0.9,
+      shadowRadius: 2,
+      elevation:0,
+      
+    },
     buttondiv: {
       width:'50%',
       alignItems:'center',

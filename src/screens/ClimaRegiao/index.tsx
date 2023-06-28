@@ -7,6 +7,12 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {VerificaClima} from '../CalendarioClima/validacoes'
 import { ClimaInterface } from '../../interfaces/Clima';
+import getOverlappingDaysInIntervals from 'date-fns/fp/getOverlappingDaysInIntervals/index';
+import { Row } from 'react-bootstrap';
+import { FontAwesome5 } from '@expo/vector-icons';
+import estilllo from '../../styles';
+import { Ionicons } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'; 
 interface Plantacao{
   plantacaoId :number;
 }
@@ -90,8 +96,16 @@ const ClimaRegiao = () => {
       for (let i = 0; i < updatedCityDetails.length; i++) {
         const cityDetail = updatedCityDetails[i];
         const latitude = cityDetail.lat;
-        const longitude = String(cityDetail.long);
+        const longitude = cityDetail.long;
         await getTemp(latitude, longitude);
+        cityDetail.temperatura = data.current_weather?.temperature || '';
+        cityDetail.velVento = data.current_weather?.windspeed || '';
+        cityDetail.tempMax = data.daily?.temperature_2m_max || [];
+        cityDetail.tempMin = data.daily?.temperature_2m_min || [];
+        cityDetail.precipitation = data.daily?.precipitation_probability_max || [];
+        cityDetail.dias = data.daily?.time || [],
+        cityDetail.lat = dataCity.latLng?.lat || '';
+        cityDetail.long = dataCity.latLng?.lng || '';
       }
       setCityList(updatedCityDetails);
       setCachedCityList(updatedCityDetails);
@@ -104,6 +118,8 @@ const ClimaRegiao = () => {
       }
     };
   }, [cityDetais]);
+  
+    // Encerra o intervalo quando o componente for desmontad
 
   useEffect(() => {
     const loadCachedCityList = async () => {
@@ -130,7 +146,7 @@ const ClimaRegiao = () => {
       setData(response.data);
       //console.log(response.data);
     } catch (error) {
-      console.error('Error fetching temperature:', error);
+      
     }
   };
 
@@ -142,7 +158,7 @@ const ClimaRegiao = () => {
       setDataCity(response.data.results[0].locations[0]);
       //console.log(response.data.results[0]);
     } catch (error) {
-      console.error('Error fetching City:', error);
+      
     }
   };
 
@@ -192,18 +208,150 @@ const ClimaRegiao = () => {
   const renderCityItem = ({ item }: { item: CityDetail }) => {
     return (
       <View style={{ padding: 10,width:"100%" }}>
-        <View style={{width:"100%",alignItems:'center',borderWidth:1}}>
-          <Text>{item.name}</Text>
+          <Text style={{textAlign:'center',fontSize:40,fontWeight:'bold'}} >{item.name}</Text>
+        <View style={{flexDirection:'row'}}>
+          <View style={{flex:1,flexDirection:'column',flexWrap:'wrap',padding:10}}>
+          <View style={{flexDirection:'row',flexWrap:'wrap',gap:10}}>
+            <View style={estilllo.calendregion}>
+              
+                  <Text>{item.dias[0]}</Text>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
+                      <Text>{item.temperatura}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[0]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[0]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[0]}</Text>
+                    </View> 
+                    <View style={{flexDirection:'row'}}>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    </View>
+                </View>
+                <View style={estilllo.calendregion}>
+                  <Text>{item.dias[1]}</Text>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
+                      <Text>{item.temperatura}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[1]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[1]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[1]}</Text>
+                    </View> 
+                    <View style={{flexDirection:'row'}}>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    </View>
+                </View>
+                <View style={estilllo.calendregion}>
+                  <Text>{item.dias[2]}</Text>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
+                      <Text>{item.temperatura}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[2]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[2]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[2]}</Text>
+                    </View> 
+                    <View style={{flexDirection:'row'}}>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    </View>
+                </View>
+                <View style={estilllo.calendregion}>
+                  <Text>{item.dias[3]}</Text>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
+                      <Text>{item.temperatura}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[3]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[3]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[3]}</Text>
+                    </View> 
+                    <View style={{flexDirection:'row'}}>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    </View>
+                </View>
+                <View style={estilllo.calendregion}>
+                  <Text>{item.dias[4]}</Text>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
+                      <Text>{item.temperatura}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[4]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[4]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[4]}</Text>
+                    </View> 
+                    <View style={{flexDirection:'row'}}>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    </View>
+                </View>
+                <View style={estilllo.calendregion}>
+                  <Text>{item.dias[5]}</Text>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
+                      <Text>{item.temperatura}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[5]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[5]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[5]}</Text>
+                    </View> 
+                    <View style={{flexDirection:'row'}}>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    </View>
+                </View>
+                <View style={estilllo.calendregion}>
+                  <Text>{item.dias[6]}</Text>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
+                      <Text>{item.temperatura}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[6]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[6]}C°</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[6]}</Text>
+                    </View> 
+                    <View style={{flexDirection:'row'}}>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    </View>
+                </View>
+            </View>
+          </View>
+
         </View>
-        <View style={{flexDirection:'row',flexWrap:'wrap',borderWidth:1}}>
-          <Text>Temperatura Atual: {item.temperatura}C°</Text>
-          <Text>Dias: {data.daily?.time?.length}</Text>
-          <Text>Temperatura Máxima: {item.tempMax}</Text>
-          <Text>Temperatura Mínima: {item.tempMin}</Text>
-          <Text>Precipitação: {item.precipitation}</Text>
-          <Text>Velocidade do Vento: {item.velVento}</Text>
         </View>
-      </View>
+     
     );
   };
 
