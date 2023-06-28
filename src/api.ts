@@ -7,7 +7,7 @@ import {fazendaCadastro} from './interfaces/fazendaCadastro';
 import {temperaturas} from './models/temperaturas';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 let TokenAutorizado: string | null;
-const API_URL = 'http://10.1.12.28:5141';
+const API_URL = 'http://192.168.243.54:5141';
 
 export const getFazendasDoUsuario = async (cpf:string) => {
     try {
@@ -75,16 +75,16 @@ export const postUsuario = async (cliente: Cliente,confirmPassword : string) => 
       "password" : cliente.password,
       "confirmPassword": confirmPassword
     }
-    await axios.post('http://10.1.12.28:5141/api/Values/CreateUser', clientUser);
+    await axios.post('http://192.168.243.54:5141/api/Values/CreateUser', clientUser);
 
     // if(result == null)
     //   return;
-    await axios.post('http://10.1.12.28:5141/api/Cliente', cliente);
+    await axios.post('http://192.168.243.54:5141/api/Cliente', cliente);
     // const clienteID : any =
     // if(clienteID != 0){
     //   celulares.forEach(async celular => {
     //     celular.clienteID = clienteID;
-    //     await axios.post('http://10.1.12.28:5141/api/Celular', celular);
+    //     await axios.post('http://192.168.243.54:5141/api/Celular', celular);
     //   });
     // }
     return;
@@ -98,7 +98,7 @@ export const postUsuario = async (cliente: Cliente,confirmPassword : string) => 
 export const cadastrarFazenda = async (fazenda : fazendaCadastro) => {
   TokenAutorizado = await AsyncStorage.getItem('authToken');
     try {
-    const response = await axios.post('http://10.1.12.28:5141/api/Fazenda', fazenda, {
+    const response = await axios.post('http://192.168.243.54:5141/api/Fazenda', fazenda, {
       headers: {
         Authorization: `Bearer ${TokenAutorizado}`,
         Accept: 'application/json'
@@ -121,7 +121,7 @@ export const cadastrarFazenda = async (fazenda : fazendaCadastro) => {
 
 export const loginUser = async (cliente: LoginUser) => {
   try {
-    const response = await axios.post('http://10.1.12.28:5141/api/Values/LoginUser', cliente);
+    const response = await axios.post('http://192.168.243.54:5141/api/Values/LoginUser', cliente);
     if (response.data && response.data.token) {
       const authToken = response.data.token;
       await AsyncStorage.setItem('authToken', authToken);
