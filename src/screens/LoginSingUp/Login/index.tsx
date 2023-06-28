@@ -18,9 +18,11 @@ const LoginScreen = () => {
       password
     };
     const result = await loginUser(cliente);
-    console.log(result);
     if (result === 'success') {
       navigation.navigate('Home');
+    }
+    else{
+      console.log("Email ou senha invalida")
     }
   };
 

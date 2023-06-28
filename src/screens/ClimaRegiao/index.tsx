@@ -13,6 +13,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import estilllo from '../../styles';
 import { Ionicons } from '@expo/vector-icons'
 import { Feather } from '@expo/vector-icons'; 
+import { format } from 'date-fns';
 interface Plantacao{
   plantacaoId :number;
 }
@@ -205,6 +206,70 @@ const ClimaRegiao = () => {
     return media.toFixed(1); //
   };
 
+  const getColorByTemperature = (temperatureMAx:any , temperaturaMin:any) => {
+    if (temperatureMAx > 38.0 || temperaturaMin <17.0) {
+      return 'red'; // Define a cor como vermelha para temperaturas acima de 30°C
+    } else if (temperatureMAx > 35.0 || temperaturaMin<20.0) {
+      return '#EEAD2D'; // Define a cor como azul para temperaturas abaixo de 10°C
+    }
+      else{
+        return 'green'
+      }
+  };
+
+  const getColorByTemperatureMIN = (temperaturaMin:any) => {
+    if (temperaturaMin <17.0) {
+      return 'red'; // Define a cor como vermelha para temperaturas acima de 30°C
+    } else if (temperaturaMin<20.0) {
+      return '#EEAD2D'; // Define a cor como azul para temperaturas abaixo de 10°C
+    }
+      else{
+        return 'green'
+      }
+  };
+  
+  const getColorByTemperatureMAX = (temperatureMAx:any) => {
+    if (temperatureMAx > 38.0) {
+      return 'red'; // Define a cor como vermelha para temperaturas acima de 30°C
+    } else if (temperatureMAx > 35.0) {
+      return '#EEAD2D'; // Define a cor como azul para temperaturas abaixo de 10°C
+    }
+      else{
+        return 'green'
+      }
+  };
+
+  const getColorByChuva = (precipitacao:any) => {
+    if (precipitacao < 3 || precipitacao>7) {
+      return 'red'; // Define a cor como vermelha para temperaturas acima de 30°C
+    } else if (precipitacao < 4 || precipitacao > 6) {
+      return '#EEAD2D'; // Define a cor como azul para temperaturas abaixo de 10°C
+    }
+      else{
+        return 'green'
+      }
+  };
+
+  const getColorByVento = (vento:any) => {
+    if (vento < 40.0) {
+      return 'green'; // Define a cor como vermelha para temperaturas acima de 30°C
+    } else if (vento > 40.0 && vento <=50.0) {
+      return '#EEAD2D'; // Define a cor como azul para temperaturas abaixo de 10°C
+    }
+      else{
+        return 'red'
+      }
+  };
+  
+  const getdate = (data:any) => {
+    try{
+    return format(new Date(data),'dd-MM-yyyy')
+  }
+  catch{
+    return data
+  }
+  };
+
   const renderCityItem = ({ item }: { item: CityDetail }) => {
     return (
       <View style={{ padding: 10,width:"100%" }}>
@@ -214,138 +279,142 @@ const ClimaRegiao = () => {
           <View style={{flexDirection:'row',flexWrap:'wrap',gap:10}}>
             <View style={estilllo.calendregion}>
               
-                  <Text>{item.dias[0]}</Text>
+                  <Text >{getdate(item.dias[0])}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
-                      <Text>{item.temperatura}C°</Text>
+                      <Text style={{color:getColorByTemperature(item.tempMax[0],item.tempMin[0])}}>{item.temperatura}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[0]}C°</Text>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMAX(item.tempMax[0])}}>{item.tempMax[0]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[0]}C°</Text>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMIN(item.tempMin[0])}}>{item.tempMin[0]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[0]}</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[0])}}>{item.precipitation[0]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento }Km/h</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
-                  <Text>{item.dias[1]}</Text>
+                  <Text>{getdate(item.dias[1])}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
-                      <Text>{item.temperatura}C°</Text>
+                      <Text style={{color:getColorByTemperature(item.tempMax[0],item.tempMin[0])}}>{item.temperatura}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[1]}C°</Text>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMAX(item.tempMax[1])}}>{item.tempMax[1]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[1]}C°</Text>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMIN(item.tempMin[1])}}>{item.tempMin[1]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[1]}</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[1])}}>{item.precipitation[1]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento}Km/h</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
-                  <Text>{item.dias[2]}</Text>
+                  <Text>{getdate(item.dias[2])}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
-                      <Text>{item.temperatura}C°</Text>
+                      <Text style={{color:getColorByTemperature(item.tempMax[0],item.tempMin[0])}}>{item.temperatura}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[2]}C°</Text>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMAX(item.tempMax[2])}}>{item.tempMax[2]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[2]}C°</Text>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMIN(item.tempMin[2])}}>{item.tempMin[2]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[2]}</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[2])}}>{item.precipitation[2]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento}Km/h</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
-                  <Text>{item.dias[3]}</Text>
+                  <Text >{getdate(item.dias[3])}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
-                      <Text>{item.temperatura}C°</Text>
+                      <Text style={{color:getColorByTemperature(item.tempMax[0],item.tempMin[0])}}>{item.temperatura}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[3]}C°</Text>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMAX(item.tempMax[3])}}>{item.tempMax[3]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[3]}C°</Text>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMIN(item.tempMin[3])}}>{item.tempMin[3]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[3]}</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[3])}}>{item.precipitation[3]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento}Km/h</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
-                  <Text>{item.dias[4]}</Text>
+                  <Text>{getdate(item.dias[4])}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
-                      <Text>{item.temperatura}C°</Text>
+                      <Text style={{color:getColorByTemperature(item.tempMax[0],item.tempMin[0])}}>{item.temperatura}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[4]}C°</Text>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMAX(item.tempMax[4])}}>{item.tempMax[4]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[4]}C°</Text>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMIN(item.tempMin[4])}}>{item.tempMin[4]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[4]}</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[4])}}>{item.precipitation[4]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento}Km/h</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
-                  <Text>{item.dias[5]}</Text>
+                  <Text>{getdate(item.dias[5])}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
-                      <Text>{item.temperatura}C°</Text>
+                      <Text style={{color:getColorByTemperature(item.tempMax[0],item.tempMin[0])}}>{item.temperatura}C°</Text>
+                    </View >
+                    <View style={{flexDirection:'row'}}>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMAX(item.tempMax[5])}}>{item.tempMax[5]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[5]}C°</Text>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMIN(item.tempMin[5])}}>{item.tempMin[5]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[5]}C°</Text>
-                    </View>
-                    <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[5]}</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[5])}}>{item.precipitation[5]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento}Km/h</Text>
                     </View>
                 </View>
+                <View style={[estilllo.calendregion,{width:'31%',backgroundColor:'whites'}]}></View>
                 <View style={estilllo.calendregion}>
-                  <Text>{item.dias[6]}</Text>
+                  <Text >{getdate(item.dias[6])}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
-                      <Text>{item.temperatura}C°</Text>
+                      <Text style={{color:getColorByTemperature(item.tempMax[0],item.tempMin[0])}}>{item.temperatura}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMax[6]}C°</Text>
+                      <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMAX(item.tempMax[6])}}>{item.tempMax[6]}C°</Text>
                     </View>
+                    
                     <View style={{flexDirection:'row'}}>
-                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[6]}C°</Text>
+                      <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByTemperatureMIN(item.tempMin[6])}}>{item.tempMin[6]}C°</Text>
                     </View>
+                    
                     <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[6]}</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[6])}}>{item.precipitation[6]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento}Km/h</Text>
                     </View>
                 </View>
+                
             </View>
           </View>
 

@@ -27,7 +27,7 @@ const ClimaRegiao = () => {
         const temperatura = response.data.current.temperature;
         setTemperaturaFazenda(temperatura);
       } catch (error) {
-        console.error('Erro ao obter a temperatura da fazenda:', error);
+        
       }
     };
 
@@ -39,7 +39,7 @@ const ClimaRegiao = () => {
         const temperaturas = response.data.daily;
         setTemperaturasCidades(temperaturas);
       } catch (error) {
-        console.error('Erro ao obter as temperaturas das cidades próximas:', error);
+        
       }
     };
 
@@ -73,9 +73,7 @@ const ClimaRegiao = () => {
           strokeWidth={2}
         />
       </MapView>
-      <Text style={[styles.temperature,styles.overlaytemperatura,styles.overlayText]}>
-        Temperatura da fazenda: {temperaturaFazenda}°C
-      </Text>
+      
 
       <TouchableOpacity onPress={handleCidades} style={[styles.subheading,styles.overlaytemperturacidades,styles.overlayText,{left:'60%',paddingHorizontal:20}]}><Text style={{fontWeight:'bold'}}>Cidades Proxima</Text></TouchableOpacity>
       {temperaturasCidades.map((temperatura, index) => (

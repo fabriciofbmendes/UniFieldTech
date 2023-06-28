@@ -49,7 +49,7 @@ const CalendarioClima = () => {
         } else if (valorVento === 'verde') {
           return 'green';
         } else if (valorVento === 'amarelo') {
-          return 'yellow';
+          return '#EEAD2D';
         }
       };
       const getTextColorChuva = (index : number) => {
@@ -59,7 +59,7 @@ const CalendarioClima = () => {
         } else if (valorChuva === 'verde') {
           return 'green';
         } else if (valorChuva === 'amarelo') {
-          return 'yellow';
+          return '#EEAD2D';
         }
       };
 
@@ -70,7 +70,7 @@ const CalendarioClima = () => {
         } else if (valortemperatura === 'verde') {
           return 'green';
         } else if (valortemperatura === 'amarelo') {
-          return 'yellow';
+          return '#EEAD2D';
         }
       };    
 
