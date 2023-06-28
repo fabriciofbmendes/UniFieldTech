@@ -490,9 +490,9 @@ const ClimaRegiao = () => {
           
         />
         <TouchableOpacity
-        style={[styles.addButton,{flex:1}]}
+        style={[styles.addButton,{flex:1,backgroundColor:'red',opacity:0.8}]}
         onPress={() => clearCityList()}
-        ><Text style={styles.buttonText}>Resetar Cidades</Text>
+        ><Text style={[styles.buttonText]}>Limpar Cidades</Text>
         </TouchableOpacity>
       </View>
   </ScrollView>
