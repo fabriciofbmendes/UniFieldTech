@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, ImageBackground } from 'react
 import axios from 'axios';
 import stilo from '../../styles';
 import { getClima, getFazendasDoUsuario, getUserCpf, getTemp } from '../../api';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { propsStack } from '../../routes/Stack/Models';
 import { HumidadeAcimaDoSolo } from '../../interfaces/climApiVariables';
 import moment from 'moment';
@@ -13,6 +13,7 @@ import styles from '../../styles';
 const Home = () => {
   const [fazendas, setFazendas] = useState<Fazenda[]>([]);
   const navigation = useNavigation<propsStack>();
+  const isFocused = useIsFocused();
   const currentDate = moment().format('YYYY-MM-DD');
   const [clima, setClima] = useState<[]>([]);
   useEffect(() => {
@@ -23,7 +24,7 @@ const Home = () => {
           setFazendas(JSON.parse(response));
         }
       } catch (error) {
-        console.error('Erro ao obter fazendas:', error);
+        //console.error('Erro ao obter fazendas:', error);
       }
     };
 
@@ -34,7 +35,7 @@ const Home = () => {
     // Navegar para a tela do mapa e passar os valores da fazenda
     //const clima = JSON.stringify(await getClima(HumidadeAcimaDoSolo,currentDate,fazenda.longitude,fazenda.latitude));
     //const clima = await getTemp(fazenda.longitude,fazenda.latitude);
-    //console.log(clima);
+    ////console.log(clima);
     navigation.navigate("Fazenda", {
       latitude: fazenda.latitude,
       longitude: fazenda.longitude,
@@ -43,6 +44,21 @@ const Home = () => {
     });
   };
 
+
+  useEffect(() => {
+    const updateFazendas = async () => {
+      try {
+        const response = await getFazendasDoUsuario(await getUserCpf());
+        setFazendas(response);
+      } catch (error) {
+        //console.error('Erro ao obter fazendas:', error);
+      }
+    };
+
+    if (isFocused) {
+      updateFazendas();
+    }
+  }, [isFocused]);
 
   const handleCadastrarFazenda = () => {
     // Navegar para a tela de cadastro de fazenda

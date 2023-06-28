@@ -6,8 +6,9 @@ import * as Location from 'expo-location';
 import {fazendaCadastro} from './interfaces/fazendaCadastro';
 import {temperaturas} from './models/temperaturas';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 let TokenAutorizado: string | null;
-const API_URL = 'http://10.1.12.28:5141';
+const API_URL = 'http://192.168.1.3:5141';
 
 export const getFazendasDoUsuario = async (cpf:string) => {
     try {
@@ -21,7 +22,7 @@ export const getFazendasDoUsuario = async (cpf:string) => {
       const fazendas = response.data;
       return fazendas;
     } catch (error) {
-      console.error('Erro ao obter fazendas:', error);
+      //console.error('Erro ao obter fazendas:', error);
     }
   };
   
@@ -44,26 +45,26 @@ export const getClima = async (variavel:string,data:string,latitude:number,longi
       const horas = objeto.horas;
       const valor = objeto.valor;
 
-       console.log(`Horas: ${horas}, Valor: ${valor}`);
+       //console.log(`Horas: ${horas}, Valor: ${valor}`);
     });
 
     return response;
   } catch (error) {
-    console.error('Erro ao obter fazendas:', error);
+    //console.error('Erro ao obter fazendas:', error);
   }
 };
 
 export const getTemp = async (latitude : number, longitude : number) => {
-  console.log(latitude);
-  console.log(longitude);
+  //console.log(latitude);
+  //console.log(longitude);
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}1&hourly=relativehumidity_2m,precipitation_probability,precipitation,rain,cloudcover,windspeed_10m,winddirection_10m,temperature_80m,uv_index,uv_index_clear_sky,temperature_925hPa,relativehumidity_925hPa,cloudcover_925hPa,windspeed_925hPa,winddirection_925hPa&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,uv_index_clear_sky_max,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant&current_weather=true&timezone=America%2FSao_Paulo`
   try {
     const response = await axios.get(url);
     // const dados = temperaturas;
-    //console.log(response.data.current_weather);
+    ////console.log(response.data.current_weather);
     return response.data;
   } catch (error) {
-    console.error('Error fetching temperature:', error);
+    //console.error('Error fetching temperature:', error);
   }
 };
 
@@ -75,22 +76,22 @@ export const postUsuario = async (cliente: Cliente,confirmPassword : string) => 
       "password" : cliente.password,
       "confirmPassword": confirmPassword
     }
-    await axios.post('http://10.1.12.28:5141/api/Values/CreateUser', clientUser);
+    await axios.post('http://192.168.1.3:5141/api/Values/CreateUser', clientUser);
 
     // if(result == null)
     //   return;
-    await axios.post('http://10.1.12.28:5141/api/Cliente', cliente);
+    await axios.post('http://192.168.1.3:5141/api/Cliente', cliente);
     // const clienteID : any =
     // if(clienteID != 0){
     //   celulares.forEach(async celular => {
     //     celular.clienteID = clienteID;
-    //     await axios.post('http://10.1.12.28:5141/api/Celular', celular);
+    //     await axios.post('http://192.168.1.3:5141/api/Celular', celular);
     //   });
     // }
     return;
   } catch (error) {
-    console.log("Email ou senha invalida")
-    
+    //console.log("Email ou senha invalida")
+    Alert.alert("Erro ao cadastrar");
   }
 };
 
@@ -98,7 +99,7 @@ export const postUsuario = async (cliente: Cliente,confirmPassword : string) => 
 export const cadastrarFazenda = async (fazenda : fazendaCadastro) => {
   TokenAutorizado = await AsyncStorage.getItem('authToken');
     try {
-    const response = await axios.post('http://10.1.12.28:5141/api/Fazenda', fazenda, {
+    const response = await axios.post('http://192.168.1.3:5141/api/Fazenda', fazenda, {
       headers: {
         Authorization: `Bearer ${TokenAutorizado}`,
         Accept: 'application/json'
@@ -107,13 +108,13 @@ export const cadastrarFazenda = async (fazenda : fazendaCadastro) => {
     return response.data;
   } catch (error: any) {
     if (error.response) {
-      console.log('Erro na resposta:', error.response.data);
-      console.log('Status do erro:', error.response.status);
-      console.log('Headers da resposta:', error.response.headers);
+      //console.log('Erro na resposta:', error.response.data);
+      //console.log('Status do erro:', error.response.status);
+      //console.log('Headers da resposta:', error.response.headers);
     } else if (error.request) {
-      console.log('Erro na requisição:', error.request);
+      //console.log('Erro na requisição:', error.request);
     } else {
-      console.log('Erro desconhecido:', error.message);
+      //console.log('Erro desconhecido:', error.message);
     }
     throw error;
   }
@@ -121,7 +122,7 @@ export const cadastrarFazenda = async (fazenda : fazendaCadastro) => {
 
 export const loginUser = async (cliente: LoginUser) => {
   try {
-    const response = await axios.post('http://10.1.12.28:5141/api/Values/LoginUser', cliente);
+    const response = await axios.post('http://192.168.1.3:5141/api/Values/LoginUser', cliente);
     if (response.data && response.data.token) {
       const authToken = response.data.token;
       await AsyncStorage.setItem('authToken', authToken);
@@ -132,7 +133,7 @@ export const loginUser = async (cliente: LoginUser) => {
       throw new Error('Token de autenticação não encontrado na resposta da API.');
     }
   } catch (error) {
-    console.error("Email ou senha invalida") // Relança o erro para ser tratado posteriormente
+    //console.error("Email ou senha invalida") // Relança o erro para ser tratado posteriormente
   }
 };
 
@@ -147,7 +148,7 @@ export const getUserId = async () => {
     const userId = response.data;
     return userId;
   } catch (error) {
-    console.error('Erro ao obter o ID do usuário:', error);
+    //console.error('Erro ao obter o ID do usuário:', error);
     return null;
   }
 };
@@ -162,7 +163,7 @@ export const getUserCpf = async () => {
     const userCpf = response.data;
     return userCpf;
   } catch (error) {
-    console.error('Erro ao obter o ID do usuário:', error);
+    //console.error('Erro ao obter o ID do usuário:', error);
     return null;
   }
 };
@@ -177,7 +178,7 @@ export const PupularDropdownPlantacao = async () => {
     const plantacoes = response.data;
     return plantacoes;
   } catch (error) {
-    console.error('Erro ao obter o ID do usuário:', error);
+    //console.error('Erro ao obter o ID do usuário:', error);
     return null;
   }
 };

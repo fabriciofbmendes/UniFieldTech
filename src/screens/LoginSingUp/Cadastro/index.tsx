@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import axios from 'axios';
 import styles from '../../../styles';
 import { TextInputMask } from 'react-native-masked-text';
@@ -37,10 +37,11 @@ const Cadastro = () => {
       };
 
       const novoUsuario = await postUsuario(cliente,confirmarpassword);
-      console.log('Sucesso! Usuário cadastrado:', novoUsuario);
+      //console.log('Sucesso! Usuário cadastrado:', novoUsuario);
       navigation.navigate('Login');
     } catch (error) {
-      console.error('Erro ao cadastrar:', error);
+      //console.error('Erro ao cadastrar:', error);
+      Alert.alert("Erro ao cadastrar");
     }
   };
 

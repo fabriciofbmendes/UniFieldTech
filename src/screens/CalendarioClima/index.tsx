@@ -31,7 +31,7 @@ const CalendarioClima = () => {
             const perigoResponse = await VerificaClima(plantacaoId, response);
             setPerigo(perigoResponse);
             } catch (error) {
-            console.log(error);
+            //console.log(error);
             }
         };
         obterTemperaturaFazenda();

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, ImageBackground, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TextInput, Text, ImageBackground, Button, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import axios from 'axios';
 import styles from '../../../styles';
 import { useNavigation } from '@react-navigation/native';
@@ -22,7 +22,8 @@ const LoginScreen = () => {
       navigation.navigate('Home');
     }
     else{
-      console.log("Email ou senha invalida")
+      //console.log("Email ou senha invalida")
+      Alert.alert("Email ou senha invalida");
     }
   };
 

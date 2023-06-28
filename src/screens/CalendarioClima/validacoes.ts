@@ -2,7 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ClimaInterface } from '../../interfaces/Clima';
 let TokenAutorizado: string | null;
-const API_URL = 'http://10.1.12.28:5141';
+const API_URL = 'http://192.168.1.3:5141';
 let PerigoVento: string[] = [];
 let PerigoTemperatura: string[] = [];
 let PerigoChuva: string[] = [];
@@ -25,7 +25,7 @@ export const VerificaClima = async (plantacaoId : number,Clima : ClimaInterface)
         return Perigos;
     }
     catch (error) {
-        console.log(error);
+        //console.log(error);
     }
 }
 const VerificaVento = async (response:string) => {
@@ -35,7 +35,7 @@ const VerificaVento = async (response:string) => {
                     const windspeedMax = ClimaValidacao.daily?.windspeed_10m_max?.[i] || '0';
                     if (parseFloat(windspeedMax) < 40.0) {
                         PerigoVento[i] = "verde";
-                        console.log("PerigoVento:" + PerigoVento[i]);
+                        //console.log("PerigoVento:" + PerigoVento[i]);
                     }
                     else if (parseFloat(windspeedMax) > 40.0 && parseFloat(windspeedMax) <= 50.0) {
                         PerigoVento[i] = "amarelo";

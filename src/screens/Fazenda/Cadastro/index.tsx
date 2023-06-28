@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import axios from 'axios';
 import styles from '../../../styles';
 import { useNavigation } from '@react-navigation/native';
@@ -47,7 +47,7 @@ const CadastroFazenda = () => {
         const response = await PupularDropdownPlantacao();
         setPlantios(response);
       } catch (error) {
-        console.error('Erro ao obter plantios:', error);
+        //console.error('Erro ao obter plantios:', error);
       }
     };
 
@@ -86,14 +86,14 @@ const CadastroFazenda = () => {
         fazenda.latitude = coordinates.latitude;
         fazenda.longitude = coordinates.longitude;
       } catch (error) {
-        console.error('Erro ao buscar as coordenadas:', error);
+        ////console.error('Erro ao buscar as coordenadas:', error);
       }
       
     try {
       await cadastrarFazenda(fazenda);
       navigation.goBack();
     } catch (error) {
-      console.error('Erro ao cadastrar fazenda:', error);
+      Alert.alert("Erro ao Cadastrar Fazenda");
     }
   };
 
