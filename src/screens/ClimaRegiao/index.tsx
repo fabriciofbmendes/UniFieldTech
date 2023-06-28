@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, FlatList,Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, FlatList } from 'react-native';
 import axios from 'axios';
 import estilo from '../../styles'
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -13,7 +13,6 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import estilllo from '../../styles';
 import { Ionicons } from '@expo/vector-icons'
 import { Feather } from '@expo/vector-icons'; 
-import moment from 'moment';
 interface Plantacao{
   plantacaoId :number;
 }
@@ -23,11 +22,9 @@ type CityDetail = {
   temperatura: string;
   dias: string[];
   velVento: string;
-  maxVento: string[];
   tempMax: string[];
   tempMin: string[];
   precipitation: string[];
-  sumChuva: string[];
   lat: string | undefined;
   long: string | undefined;
 };  
@@ -81,11 +78,9 @@ const ClimaRegiao = () => {
     dias: [],
     temperatura: "",
     velVento: "",	
-    maxVento:[],
     tempMax: [],
     tempMin: [],
     precipitation: [""],
-    sumChuva: [""],
     lat: "",
     long: ""
   });
@@ -94,7 +89,7 @@ const ClimaRegiao = () => {
   const [cityList, setCityList] = useState<CityDetail[]>([]);
   const [intervalId, setIntervalId] = useState<number | null>(null);
   
-  /* useEffect(() => {
+  useEffect(() => {
     // Inicia o intervalo de atualização a cada um minuto (60 segundos)
     const id = setInterval(async () => {
       const updatedCityDetails = [...cityList];
@@ -109,7 +104,6 @@ const ClimaRegiao = () => {
         cityDetail.tempMin = data.daily?.temperature_2m_min || [];
         cityDetail.precipitation = data.daily?.precipitation_probability_max || [];
         cityDetail.dias = data.daily?.time || [],
-      
         cityDetail.lat = dataCity.latLng?.lat || '';
         cityDetail.long = dataCity.latLng?.lng || '';
       }
@@ -123,7 +117,7 @@ const ClimaRegiao = () => {
         clearInterval(intervalId);
       }
     };
-  }, [cityDetais]); */
+  }, [cityDetais]);
   
     // Encerra o intervalo quando o componente for desmontad
 
@@ -136,24 +130,6 @@ const ClimaRegiao = () => {
           setCachedCityList(parsedData);
           setCityList(parsedData);
         }
-        const updatedCityDetails = [...cityList];
-        for (let i = 0; i < updatedCityDetails.length; i++) {
-          const cityDetail = updatedCityDetails[i];
-          const latitude = cityDetail.lat;
-          const longitude = cityDetail.long;
-          await getTemp(latitude, longitude);
-          cityDetail.temperatura = data.current_weather?.temperature || '';
-          cityDetail.velVento = data.current_weather?.windspeed || '';
-          cityDetail.tempMax = data.daily?.temperature_2m_max || [];
-          cityDetail.tempMin = data.daily?.temperature_2m_min || [];
-          cityDetail.precipitation = data.daily?.precipitation_probability_max || [];
-          cityDetail.dias = data.daily?.time || [],
-        
-          cityDetail.lat = dataCity.latLng?.lat || '';
-          cityDetail.long = dataCity.latLng?.lng || '';
-        }
-        setCityList(updatedCityDetails);
-        setCachedCityList(updatedCityDetails);
       } catch (error) {
         console.error('Error loading cached city list:', error);
       }
@@ -162,30 +138,13 @@ const ClimaRegiao = () => {
     loadCachedCityList();
   }, []);
   
-  const clearCityList = async () => {
-    Alert.alert(
-      'Confirmação',
-      'Tem certeza de que deseja remover todas as cidades?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Confirmar', onPress: async () => {
-          setCityList([]); // Limpa a lista de cidades
-          setCachedCityList([]); // Limpa a lista de cidades em cache
-          await AsyncStorage.removeItem('cityDetails'); // Remove os dados do cache
 
-        } },
-      ],
-      { cancelable: false }
-    );
-    
-  };
-  
   const getTemp = async (latitude: string | undefined, longitude: string | undefined) => {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,precipitation,windspeed_10m,winddirection_10m,temperature_925hPa,relativehumidity_925hPa,windspeed_925hPa&daily=temperature_2m_max,temperature_2m_min,windspeed_10m_max,sunrise,sunset,uv_index_max,uv_index_clear_sky_max,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=America%2FSao_Paulo`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,precipitation,windspeed_10m,winddirection_10m,temperature_925hPa,relativehumidity_925hPa,windspeed_925hPa&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,uv_index_clear_sky_max,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=America%2FSao_Paulo`;
     try {
       const response = await axios.get(url);
       setData(response.data);
-      //console.log(response.data.daily);
+      //console.log(response.data);
     } catch (error) {
       
     }
@@ -214,19 +173,16 @@ const ClimaRegiao = () => {
         name: cityName,
         temperatura: data.current_weather?.temperature || "",
         velVento: data.current_weather?.windspeed || "",
+        
         dias : data.daily?.time || [], // Armazena todas as posições em uma string separada por vírgula
-        maxVento: data.daily?.windspeed_10m_max || [],
         tempMax: data.daily?.temperature_2m_max || [], // Armazena todas as posições em uma string separada por vírgula
         tempMin: data.daily?.temperature_2m_min || [], // Armazena todas as posições em uma string separada por vírgula
         precipitation: data.daily?.precipitation_probability_max || [], // Armazena todas as posições em uma string separada por vírgula
-        sumChuva : data.daily?.precipitation_sum || [],
         lat: latitude,
         long: longitude,
       };
+  
       //console.log(newCity);
-      newCity.dias.forEach((dia: string) => {
-        dia = moment(dia).format('DD/MM');
-      });
       setCityList([...cityList, newCity]);
       await AsyncStorage.setItem('cityDetails', JSON.stringify([...cityList, newCity]));
       setCity('');
@@ -234,6 +190,19 @@ const ClimaRegiao = () => {
       const perigoResponse = await VerificaClima(plantacaoId, data);
       await setPerigo(perigoResponse);
     }
+  };
+  
+  const calcularMedia = (array: number[]) => {
+
+    if (!array || array.length === 0) {
+      //console.log("No");
+      return 0; // Retorna 0 se o array estiver vazio ou não estiver definido
+    }
+  
+    const soma = array.reduce((a, b) => a + b); // Calcula a soma dos valores
+    const media = soma / array.length; // Calcula a média
+  
+    return media.toFixed(1); //
   };
 
   const renderCityItem = ({ item }: { item: CityDetail }) => {
@@ -245,7 +214,7 @@ const ClimaRegiao = () => {
           <View style={{flexDirection:'row',flexWrap:'wrap',gap:10}}>
             <View style={estilllo.calendregion}>
               
-                  <Text>{moment(item.dias[0]).format('DD/MM')}</Text>
+                  <Text>{item.dias[0]}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
                       <Text>{item.temperatura}C°</Text>
@@ -257,14 +226,14 @@ const ClimaRegiao = () => {
                       <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[0]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[0]}%</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[0]}</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.maxVento[0]}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
-                  <Text>{moment(item.dias[1]).format('DD/MM')}</Text>
+                  <Text>{item.dias[1]}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
                       <Text>{item.temperatura}C°</Text>
@@ -276,14 +245,14 @@ const ClimaRegiao = () => {
                       <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[1]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[1]}%</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[1]}</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.maxVento[1]}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
-                  <Text>{moment(item.dias[2]).format('DD/MM')}</Text>
+                  <Text>{item.dias[2]}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
                       <Text>{item.temperatura}C°</Text>
@@ -295,14 +264,14 @@ const ClimaRegiao = () => {
                       <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[2]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[2]}%</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[2]}</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.maxVento[2]}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
-                  <Text>{moment(item.dias[3]).format('DD/MM')}</Text>
+                  <Text>{item.dias[3]}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
                       <Text>{item.temperatura}C°</Text>
@@ -314,14 +283,14 @@ const ClimaRegiao = () => {
                       <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[3]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[3]}%</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[3]}</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.maxVento[3]}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
-                  <Text>{moment(item.dias[4]).format('DD/MM')}</Text>
+                  <Text>{item.dias[4]}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
                       <Text>{item.temperatura}C°</Text>
@@ -333,14 +302,14 @@ const ClimaRegiao = () => {
                       <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[4]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[4]}%</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[4]}</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.maxVento[4]}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
-                  <Text>{moment(item.dias[5]).format('DD/MM')}</Text>
+                  <Text>{item.dias[5]}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
                       <Text>{item.temperatura}C°</Text>
@@ -352,14 +321,14 @@ const ClimaRegiao = () => {
                       <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[5]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[5]}%</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[5]}</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.maxVento[5]}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
-                  <Text>{moment(item.dias[6]).format('DD/MM')}</Text>
+                  <Text>{item.dias[6]}</Text>
                     <View style={{flexDirection:'row'}}>
                       <FontAwesome5 name="temperature-high" size={18} color="black"  style={estilllo.icons} /> 
                       <Text>{item.temperatura}C°</Text>
@@ -371,10 +340,10 @@ const ClimaRegiao = () => {
                       <FontAwesome5 name="temperature-low" size={18} color="black"  style={estilllo.icons} /><Text>{item.tempMin[6]}C°</Text>
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[6]}%</Text>
+                      <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text>{item.precipitation[6]}</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.maxVento[6]}</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text>{item.velVento}</Text>
                     </View>
                 </View>
             </View>
@@ -385,43 +354,23 @@ const ClimaRegiao = () => {
      
     );
   };
-  //AIzaSyCelaOIk2vZZiqnUm9-M_x5Vt8BQcyf2jE
-  return (
-    <View style={{ flex: 1, padding: 20 }}>
+
+  return ( 
+  <View style={{ flex: 1, padding: 20 }}>
       <Text style={styles.headerText}>Lista de Cidades</Text>
-      <View style={styles.container}>
-      <View style={estilo.input}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Digite o nome da cidade"
-          value={city}
-          onChangeText={(text) => setCity(text)}
-        />
-        <GooglePlacesAutocomplete
-          placeholder="Pesquisar"
-          onPress={(data, details) => setCity(data.description)}
-          query={{
-            key: 'AIzaSyCelaOIk2vZZiqnUm9-M_x5Vt8BQcyf2jE',
-            language: 'pt', 
-          }}
-          requestUrl={{
-            url: 'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
-            useOnPlatform: 'web',
-          }}
-          styles={{
-            textInputContainer: { display: 'none' },
-          }}
-        />
-      </View>
-      <TouchableOpacity style={styles.addButton} onPress={() => handleAddCity(city)}>
-        <Ionicons name="add-circle" size={24} color="black" />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.addButton, { }]}
-        onPress={clearCityList}
-      >
-        <Ionicons name="trash-bin" size={24} color="red" />
-      </TouchableOpacity>
+        <View style={{flexDirection:'row',gap:10,alignItems:'center',justifyContent:'center'}}>
+          <TextInput
+            style={[estilo.input,{width:"60%"}]}
+            placeholder="Insira o nome da cidade"
+            onChangeText={text => setCity(text)}
+            value={city}
+          />
+          <TouchableOpacity
+            style={[styles.addButton,{flex:1}]}
+            onPress={() => handleAddCity(city)}
+          >
+            <Text style={styles.buttonText}>Adicionar</Text>
+          </TouchableOpacity>
       </View>
 
       <FlatList
@@ -435,27 +384,8 @@ const ClimaRegiao = () => {
 };
 
 const styles = StyleSheet.create({
-  
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  textInput: {
-    flex: 1,
-    height: 40,
-    paddingHorizontal: 10,
-  },
   addButton: {
+    backgroundColor: 'blue',
     paddingVertical: 10,
     alignItems:'center',
     borderRadius: 8,
