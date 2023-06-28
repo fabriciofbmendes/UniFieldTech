@@ -91,7 +91,7 @@ import { StyleSheet } from 'react-native';
       shadowOpacity: 0.9,
       shadowRadius: 2,
       elevation:0,
-      
+      maxWidth:'32%'
     },
     buttondiv: {
       width:'50%',

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, FlatList, ScrollView, Alert } from 'react-native';
 import axios from 'axios';
 import estilo from '../../styles'
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -126,6 +126,7 @@ const ClimaRegiao = () => {
     // Encerra o intervalo quando o componente for desmontad
 
   useEffect(() => {
+    
     const loadCachedCityList = async () => {
       try {
         const cachedData = await AsyncStorage.getItem('cityDetails');
@@ -158,7 +159,7 @@ const ClimaRegiao = () => {
     };
   
     loadCachedCityList();
-  }, []);
+  }, [cityDetais]);
   
 
   const getTemp = async (latitude: string | undefined, longitude: string | undefined) => {
@@ -291,13 +292,31 @@ const ClimaRegiao = () => {
   }
   };
 
+  const clearCityList = async () => {
+    Alert.alert(
+      'Confirmação',
+      'Tem certeza de que deseja remover todas as cidades?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Confirmar', onPress: async () => {
+          setCityList([]); // Limpa a lista de cidades
+          setCachedCityList([]); // Limpa a lista de cidades em cache
+          await AsyncStorage.removeItem('cityDetails'); // Remove os dados do cache
+
+        } },
+      ],
+      { cancelable: false }
+    );
+    
+  };
+
   const renderCityItem = ({ item }: { item: CityDetail }) => {
     return (
       <View style={{ padding: 10,width:"100%" }}>
           <Text style={{textAlign:'center',fontSize:40,fontWeight:'bold'}} >{item.name}</Text>
         <View style={{flexDirection:'row'}}>
           <View style={{flex:1,flexDirection:'column',flexWrap:'wrap',padding:10}}>
-          <View style={{flexDirection:'row',flexWrap:'wrap',gap:10}}>
+          <View style={{flexDirection:'row',flexWrap:'wrap',gap:7}}>
             <View style={estilllo.calendregion}>
               
                   <Text >{getdate(item.dias[0])}</Text>
@@ -438,7 +457,6 @@ const ClimaRegiao = () => {
                 
             </View>
           </View>
-
         </View>
         </View>
      
@@ -446,30 +464,39 @@ const ClimaRegiao = () => {
   };
 
   return ( 
-  <View style={{ flex: 1, padding: 20 }}>
-      <Text style={styles.headerText}>Lista de Cidades</Text>
-        <View style={{flexDirection:'row',gap:10,alignItems:'center',justifyContent:'center'}}>
-          <TextInput
-            style={[estilo.input,{width:"60%"}]}
-            placeholder="Insira o nome da cidade"
-            onChangeText={text => setCity(text)}
-            value={city}
-          />
-          <TouchableOpacity
-            style={[styles.addButton,{flex:1}]}
-            onPress={() => handleAddCity(city)}
-          >
-            <Text style={styles.buttonText}>Adicionar</Text>
-          </TouchableOpacity>
-      </View>
+  <ScrollView>
+    <View style={{ flex: 1, padding: 20 }}>
+        <Text style={styles.headerText}>Lista de Cidades</Text>
+          <View style={{flexDirection:'row',gap:10,alignItems:'center',justifyContent:'center'}}>
+            <TextInput
+              style={[estilo.input,{width:"60%"}]}
+              placeholder="Insira o nome da cidade"
+              onChangeText={text => setCity(text)}
+              value={city}
+            />
+            <TouchableOpacity
+              style={[styles.addButton,{flex:1}]}
+              onPress={() => handleAddCity(city)}
+            >
+              <Text style={styles.buttonText}>Adicionar</Text>
+            </TouchableOpacity>
+        </View>
 
-      <FlatList
-        data={cityList}
-        renderItem={renderCityItem}
-        keyExtractor={(item, index) => index.toString()}
-        style={styles.flatList}
-      />
-    </View>
+        <FlatList
+          data={cityList}
+          renderItem={renderCityItem}
+          keyExtractor={(item, index) => index.toString()}
+          style={styles.flatList}
+          
+        />
+        <TouchableOpacity
+        style={[styles.addButton,{flex:1}]}
+        onPress={() => clearCityList()}
+        ><Text style={styles.buttonText}>Resetar Cidades</Text>
+        </TouchableOpacity>
+      </View>
+  </ScrollView>
+
   );
 };
 
