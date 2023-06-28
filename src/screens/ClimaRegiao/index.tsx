@@ -159,7 +159,7 @@ const ClimaRegiao = () => {
     };
   
     loadCachedCityList();
-  }, [cityDetais]);
+  }, [cityList]);
   
 
   const getTemp = async (latitude: string | undefined, longitude: string | undefined) => {
