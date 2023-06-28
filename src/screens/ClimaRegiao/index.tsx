@@ -92,7 +92,7 @@ const ClimaRegiao = () => {
   const [cityList, setCityList] = useState<CityDetail[]>([]);
   const [intervalId, setIntervalId] = useState<number | null>(null);
   
-  /* useEffect(() => {
+  useEffect(() => {
     // Inicia o intervalo de atualização a cada um minuto (60 segundos)
     const id = setInterval(async () => {
       const updatedCityDetails = [...cityList];
@@ -121,11 +121,11 @@ const ClimaRegiao = () => {
         clearInterval(intervalId);
       }
     };
-  }, [cityDetais]); */
+  }, [cityDetais]);
   
     // Encerra o intervalo quando o componente for desmontad
 
-  useEffect(() => {
+  /* useEffect(() => {
     
     const loadCachedCityList = async () => {
       try {
@@ -159,7 +159,7 @@ const ClimaRegiao = () => {
     };
   
     loadCachedCityList();
-  }, [cityList]);
+  }, [cityList]); */
   
 
   const getTemp = async (latitude: string | undefined, longitude: string | undefined) => {
