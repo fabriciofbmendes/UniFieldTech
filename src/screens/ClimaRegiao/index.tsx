@@ -25,6 +25,7 @@ type CityDetail = {
   velVento: string;
   tempMax: string[];
   tempMin: string[];
+  maxVento: string[];
   precipitation: string[];
   lat: string | undefined;
   long: string | undefined;
@@ -78,7 +79,8 @@ const ClimaRegiao = () => {
     name: "",
     dias: [],
     temperatura: "",
-    velVento: "",	
+    velVento: "",
+    maxVento: [],	
     tempMax: [],
     tempMin: [],
     precipitation: [""],
@@ -90,7 +92,7 @@ const ClimaRegiao = () => {
   const [cityList, setCityList] = useState<CityDetail[]>([]);
   const [intervalId, setIntervalId] = useState<number | null>(null);
   
-  useEffect(() => {
+  /* useEffect(() => {
     // Inicia o intervalo de atualização a cada um minuto (60 segundos)
     const id = setInterval(async () => {
       const updatedCityDetails = [...cityList];
@@ -101,6 +103,7 @@ const ClimaRegiao = () => {
         await getTemp(latitude, longitude);
         cityDetail.temperatura = data.current_weather?.temperature || '';
         cityDetail.velVento = data.current_weather?.windspeed || '';
+        cityDetail.maxVento = data.daily?.windspeed_10m_max || [];
         cityDetail.tempMax = data.daily?.temperature_2m_max || [];
         cityDetail.tempMin = data.daily?.temperature_2m_min || [];
         cityDetail.precipitation = data.daily?.precipitation_probability_max || [];
@@ -118,7 +121,7 @@ const ClimaRegiao = () => {
         clearInterval(intervalId);
       }
     };
-  }, [cityDetais]);
+  }, [cityDetais]); */
   
     // Encerra o intervalo quando o componente for desmontad
 
@@ -130,6 +133,24 @@ const ClimaRegiao = () => {
           const parsedData = JSON.parse(cachedData);
           setCachedCityList(parsedData);
           setCityList(parsedData);
+          const updatedCityDetails = [...cityList];
+        for (let i = 0; i < updatedCityDetails.length; i++) {
+          const cityDetail = updatedCityDetails[i];
+          const latitude = cityDetail.lat;
+          const longitude = cityDetail.long;
+          await getTemp(latitude, longitude);
+          cityDetail.temperatura = data.current_weather?.temperature || '';
+          cityDetail.velVento = data.current_weather?.windspeed || '';
+          cityDetail.tempMax = data.daily?.temperature_2m_max || [];
+          cityDetail.tempMin = data.daily?.temperature_2m_min || [];
+          cityDetail.precipitation = data.daily?.precipitation_probability_max || [];
+          cityDetail.dias = data.daily?.time || [],
+
+          cityDetail.lat = dataCity.latLng?.lat || '';
+          cityDetail.long = dataCity.latLng?.lng || '';
+        }
+        setCityList(updatedCityDetails);
+        setCachedCityList(updatedCityDetails);
         }
       } catch (error) {
         console.error('Error loading cached city list:', error);
@@ -141,7 +162,7 @@ const ClimaRegiao = () => {
   
 
   const getTemp = async (latitude: string | undefined, longitude: string | undefined) => {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,precipitation,windspeed_10m,winddirection_10m,temperature_925hPa,relativehumidity_925hPa,windspeed_925hPa&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,uv_index_clear_sky_max,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=America%2FSao_Paulo`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,precipitation,windspeed_10m,winddirection_10m,temperature_925hPa,relativehumidity_925hPa,windspeed_925hPa&daily=temperature_2m_max,windspeed_10m_max,temperature_2m_min,sunrise,sunset,uv_index_max,uv_index_clear_sky_max,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max,winddirection_10m_dominant,shortwave_radiation_sum,et0_fao_evapotranspiration&current_weather=true&timezone=America%2FSao_Paulo`;
     try {
       const response = await axios.get(url);
       setData(response.data);
@@ -174,7 +195,7 @@ const ClimaRegiao = () => {
         name: cityName,
         temperatura: data.current_weather?.temperature || "",
         velVento: data.current_weather?.windspeed || "",
-        
+        maxVento : data.daily?.windspeed_10m_max || [], // Armazena todas as posições em uma string separada por vírgula
         dias : data.daily?.time || [], // Armazena todas as posições em uma string separada por vírgula
         tempMax: data.daily?.temperature_2m_max || [], // Armazena todas as posições em uma string separada por vírgula
         tempMin: data.daily?.temperature_2m_min || [], // Armazena todas as posições em uma string separada por vírgula
@@ -294,7 +315,7 @@ const ClimaRegiao = () => {
                       <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[0])}}>{item.precipitation[0]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento }Km/h</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.maxVento[0])}}>{item.maxVento[0] }Km/h</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
@@ -313,7 +334,7 @@ const ClimaRegiao = () => {
                       <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[1])}}>{item.precipitation[1]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento}Km/h</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.maxVento[1])}}>{item.maxVento[1]}Km/h</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
@@ -332,7 +353,7 @@ const ClimaRegiao = () => {
                       <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[2])}}>{item.precipitation[2]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento}Km/h</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.maxVento[2])}}>{item.maxVento[2]}Km/h</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
@@ -351,7 +372,7 @@ const ClimaRegiao = () => {
                       <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[3])}}>{item.precipitation[3]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento}Km/h</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.maxVento[3])}}>{item.maxVento[3]}Km/h</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
@@ -370,7 +391,7 @@ const ClimaRegiao = () => {
                       <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[4])}}>{item.precipitation[4]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento}Km/h</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.maxVento[4])}}>{item.maxVento[4]}Km/h</Text>
                     </View>
                 </View>
                 <View style={estilllo.calendregion}>
@@ -389,7 +410,7 @@ const ClimaRegiao = () => {
                       <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[5])}}>{item.precipitation[5]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento}Km/h</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.maxVento[5])}}>{item.maxVento[5]}Km/h</Text>
                     </View>
                 </View>
                 <View style={[estilllo.calendregion,{width:'31%',backgroundColor:'whites'}]}></View>
@@ -411,7 +432,7 @@ const ClimaRegiao = () => {
                       <Ionicons name="rainy-outline" color="#000" size={18} style={estilllo.icons}></Ionicons><Text style={{color:getColorByChuva(item.precipitation[6])}}>{item.precipitation[6]}mm</Text>
                     </View> 
                     <View style={{flexDirection:'row'}}>
-                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.velVento)}}>{item.velVento}Km/h</Text>
+                    <Feather name="wind" size={18} color="black"  style={estilllo.icons} /><Text style={{color:getColorByVento(item.maxVento[6])}}>{item.maxVento[6]}Km/h</Text>
                     </View>
                 </View>
                 
